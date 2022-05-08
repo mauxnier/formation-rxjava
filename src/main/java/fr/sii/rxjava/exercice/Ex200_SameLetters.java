@@ -22,7 +22,23 @@ public class Ex200_SameLetters implements App, Consts {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        Observable<Character> chars = services.randomChars()
+                .take(5)
+                .share();
+
+        Observable<Command> gameResult = chars.zipWith(in.keys(), (rndChar, key) -> rndChar.equals(key))
+                .takeUntil(v -> !v)
+                .last()
+                .map(lastEquals -> lastEquals ? GAGNE : PERDU)
+                .share();
+
+        return merge(
+                gameResult,
+                chars.map(Cmd::addLog)
+                        .takeUntil(gameResult))
+                .repeat();
     }
 
     @Override

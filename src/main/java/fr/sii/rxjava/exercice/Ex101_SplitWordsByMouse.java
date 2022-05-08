@@ -20,7 +20,12 @@ public class Ex101_SplitWordsByMouse implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.keys()
+                .buffer(in.mouseLeftClickCount())
+                .flatMap(b -> services.reverse(b).reduce("", (acc, v) -> acc + v))
+                .map(str -> addLog("Mot: '" + str + "'"));
     }
 
     @Override

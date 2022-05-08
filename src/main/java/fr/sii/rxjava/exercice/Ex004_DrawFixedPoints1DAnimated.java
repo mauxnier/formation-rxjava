@@ -20,6 +20,11 @@ public class Ex004_DrawFixedPoints1DAnimated implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return interval(250, MILLISECONDS)
+                .take(20)
+                .map(x -> pt(100 + 20 * x, 100))
+                .map(Cmd::addPt);
     }
 }

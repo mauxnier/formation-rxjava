@@ -20,7 +20,9 @@ public class Ex020_IsAllMoviesAreAfter70s implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        return services.movies().allMovies()
+                .all(m -> m.year >= 1970)
+                .map(r -> r ? YES : NO);
     }
 
     @Override

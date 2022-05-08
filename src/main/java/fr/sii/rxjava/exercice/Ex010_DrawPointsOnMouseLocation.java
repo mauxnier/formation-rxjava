@@ -17,6 +17,9 @@ public class Ex010_DrawPointsOnMouseLocation implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.mouseXY()
+                .map(Cmd::addPt);
     }
 }

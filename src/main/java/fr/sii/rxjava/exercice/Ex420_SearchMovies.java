@@ -48,13 +48,37 @@ public class Ex420_SearchMovies implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        Observable<String> query = in.keys()
+                .map(Character::toLowerCase)
+                .scan("", (acc, c) -> c == BACKSPACE ? acc.substring(0, max(0, acc.length() - 1)) : acc + c)
+                .skip(1)
+                .share();
+
+        return merge(
+                from(INIT_CMD),
+
+                query.map(q -> queryCmd(q)),
+
+                query.compose(displayDatasAtPt(services.movies().allActors(), ACTOR_PT)),
+                query.compose(displayDatasAtPt(services.movies().allDirectors(), DIRECTOR_PT)),
+                query.compose(displayDatasAtPt(services.movies().allMovies(), MOVIE_PT)));
     }
 
     static Command queryCmd(String q) {return uniq(QUERY_ID, addText(QUERY_PT, QUERY_PREFIX + q, BLUE));}
 
     static <T> Transformer<String, Command> displayDatasAtPt(Observable<T> src, Pt p) {
-        return str -> Observable.never();
+        // return Observable.never();
+
+        return queryObs -> queryObs
+                .debounce(500, MILLISECONDS)
+                .distinctUntilChanged()
+                .switchMap(debounced -> src
+                        .filter(a -> a.toString().toLowerCase().contains(debounced))
+                        .zipWith(range(1, MAX_VALUE), (a, i) -> resultCmd(p, a, i))
+                        .scan(imListOf(Command.class), Utils::imAppend)
+                        .map(cmds -> resultGroupCmd(p, cmds)));
     }
 
     static Command resultGroupCmd(Pt p, List<Command> cmds) {return uniq("" + p, group(cmds));}

@@ -23,7 +23,15 @@ public class Ex021_ListOfMoviesWithActresses implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        return services.movies().allMovies()
+                .flatMap(m -> services.movies().getMovieActors(m.title)
+                        .takeFirst(a -> a.sex == f)
+                        .map(__ -> m))
+                .map(Movie::title)
+                .distinct()
+                .toSortedList()
+                .flatMap(Observable::from)
+                .map(Cmd::addLog);
     }
 
     @Override

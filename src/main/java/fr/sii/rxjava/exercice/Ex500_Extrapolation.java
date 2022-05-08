@@ -23,7 +23,27 @@ public class Ex500_Extrapolation implements MainFrame.App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return merge(
+                in.mouseLeftClickCount()
+                        .withLatestFrom(in.mouseXY(), (clicks, pos) -> pos)
+                        .distinctUntilChanged()
+                        .buffer(2, 1)
+                        .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                        .switchMap(pts_color -> {
+                            List<Pt> pts = pts_color._1;
+                            Pt p1 = pts.get(0);
+                            Pt p2 = pts.get(1);
+                            Color color = pts_color._2.color;
+
+                            return interval(250, MILLISECONDS)
+                                    .map(t -> p1.extrapolate(p2, 20 + t * 10))
+                                    .map(p -> addPt(p, color))
+                                    .startWith(just(addLine(p1, p2, color), addPt(p1, ORANGE), addPt(p2, ORANGE)));
+                        }),
+
+                in.mouseRightClickCount().flatMap(e -> just(clear())));
     }
 
     @Override

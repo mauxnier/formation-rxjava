@@ -27,7 +27,19 @@ public class Ex110_ClickColorNames implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.mouseLeftClickCount()
+                .withLatestFrom(in.mouseXY(), (c, p) -> p)
+                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .flatMap(p_couleur -> {
+                    Couleur couleur = p_couleur._2;
+                    Pt p = p_couleur._1;
+
+                    return services.stringCapitalise(couleur.name())
+                            .zipWith(range(1, 100), (chaR, i) -> addLetter(couleur, p, chaR, i))
+                            .startWith(addPt(p, couleur.color));
+                });
     }
 
     static Command addLetter(Couleur couleur, Pt p, Character c, Integer index) {

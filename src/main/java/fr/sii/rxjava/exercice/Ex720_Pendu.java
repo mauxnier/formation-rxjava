@@ -39,7 +39,17 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return services.words()
+                .concatMap(mot -> just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, ""))))
+                        .concatWith(in.keys()
+                                .distinct()
+                                .scan(new State(mot), State::update)
+                                .skip(1)
+                                .takeUntil(c -> c.isEnd())
+                                .flatMap(s -> s.cmds))
+                        .concatWith(just(clear()).delay(3, SECONDS)));
     }
 
     @Override
@@ -50,6 +60,42 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
     static String discover(String mot, String chars) { return mot.chars().mapToObj(c -> (chars.indexOf(c) == -1 ? '_' : (char) c) + " ").collect(joining()); }
 
     static Observable<Command> text(String mot, String keys) {return just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, keys))));}
+
+    static class State {
+        final String mot;
+        final String chars;
+        final int goods;
+        final int bads;
+        final Observable<Command> cmds;
+
+        State(String mot, String chars, int goods, int bads, Observable<Command> cmds) {
+            this.mot = mot;
+            this.chars = chars;
+            this.goods = goods;
+            this.bads = bads;
+            this.cmds = cmds;
+        }
+
+        State(String mot) { this(mot, "", 0, 0, empty()); }
+
+        State update(char chaR) {
+            int found = (int) mot.chars().filter(c -> c == chaR).count();
+            int newGoods = goods + found;
+            int newBads = bads + (found == 0 ? 1 : 0);
+            boolean win = newGoods == mot.length();
+            boolean lose = newBads == BODY_PARTS.size();
+            String newChars = chars + chaR;
+            Observable<Command> badPart = BODY_PARTS.get(bads);
+            Observable<Command> newCmds = win ? concat(text(mot, newChars), just(GAGNE))
+                    : lose ? concat(badPart, just(PERDU))
+                    : (found > 0 ? text(mot, newChars)
+                    : badPart);
+
+            return new State(mot, newChars, newGoods, newBads, newCmds);
+        }
+
+        boolean isEnd() {return goods == mot.length() || bads == BODY_PARTS.size();}
+    }
 
     static Observable<Command> gallows() {
         return merge(

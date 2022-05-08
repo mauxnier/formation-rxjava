@@ -28,7 +28,27 @@ public class Ex700_ClickThenKey implements App, Consts {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.mouseLeftClickCount()
+                .withLatestFrom(in.mouseXY(), (c, p) -> p)
+                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .concatMap(p_couleur -> {
+                    Couleur couleur = p_couleur._2;
+
+                    return combineLatest(
+                            elapsedTime(),
+                            in.keys().scan("", (acc, c) -> c == BACKSPACE ? acc.substring(0, max(0, acc.length() - 1)) : acc + c),
+                            zeroThenAnErrorAfter5Seconds(),
+                            (t, txt, __) -> T2.t2(t, txt))
+                            .takeUntil(time_txt -> time_txt._2.equals(couleur.name()))
+                            .flatMap(time_txt -> just(
+                                    uniq("time", timeCmd(TIME_PT, time_txt._1)),
+                                    uniq("txt", Cmd.addText(100, 20, "Frappe: '" + time_txt._2 + "'")))
+                                    .startWith(time_txt._2.equals(couleur.name()) ? just(GAGNE) : empty()))
+                            .<Command>onErrorResumeNext(just(PERDU))
+                            .startWith(addPt(p_couleur._1, couleur.color), couleurARecopier(couleur));
+                });
     }
 
     static Command couleurARecopier(Couleur c) {
@@ -38,5 +58,18 @@ public class Ex700_ClickThenKey implements App, Consts {
     @Override
     public List<String> description() {
         return singletonList("Clickez puis recopiez le mot...");
+    }
+
+    private static Observable<Long> zeroThenAnErrorAfter5Seconds() {
+        return just(0L)
+                .concatWith(never())
+                .timeout(5_001, MILLISECONDS, error(new TimeoutException()));
+    }
+
+    private Observable<Long> elapsedTime() {
+        return interval(100, MILLISECONDS)
+                .timeInterval()
+                .map(TimeInterval::getIntervalInMilliseconds)
+                .scan(Long::sum);
     }
 }

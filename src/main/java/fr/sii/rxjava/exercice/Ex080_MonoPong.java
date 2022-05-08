@@ -37,7 +37,18 @@ public class Ex080_MonoPong implements MainFrame.App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.mouseXY()
+                .map(Pt::x)
+                .startWith(0)
+                .flatMapIterable(x -> racketCmds(x))
+                .startWith(
+                        addLine(MIN, MIN, MAX, MIN, RED),
+                        addLine(MAX, MIN, MAX, MAX, RED),
+                        addLine(MAX, MAX, MIN, MAX, RED),
+                        addLine(MIN, MAX, MIN, MIN, RED)
+                );
     }
 
     static List<Command> racketCmds(Integer x) {

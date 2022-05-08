@@ -10,6 +10,7 @@ import rx.Observable;
 import rx.Scheduler;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static fr.sii.rxjava.util.Cmd.*;
 import static fr.sii.rxjava.util.MainFrame.App;
@@ -25,7 +26,28 @@ public class Ex250_ColoredLetters implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return in.mouseLeftClickCount()
+                .withLatestFrom(in.mouseXY(), (c, p) -> p)
+                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .concatMap(p_couleur -> {
+                    Pt p = p_couleur._1;
+                    Couleur couleur = p_couleur._2;
+
+                    return just(startTyping(couleur))
+                            .concatWith(in.keys()
+                                    .timeout(2, SECONDS)
+                                    .scan("", (acc, chaR) -> acc + chaR)
+                                    .skip(1)
+                                    .map(str -> uniq("" + p, addText(p, str, couleur.color)))
+                                    .onErrorResumeNext(e ->{
+                                        if(e instanceof TimeoutException){
+                                            return  just(endTyping(p_couleur._2));
+                                        }
+                                        return Observable.error(e);
+                                    }));
+                });
     }
 
     static Command endTyping(Couleur couleur) {return addLog("Fin de saisie en " + couleur.name().toUpperCase() + ", clickez pour une autre saisie");}

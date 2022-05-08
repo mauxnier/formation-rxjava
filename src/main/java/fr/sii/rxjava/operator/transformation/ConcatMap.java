@@ -15,6 +15,7 @@ public class ConcatMap {
         Observable<Integer> ints1 = createColdIntsObservable(10, 10, "Ints 1", RED, 0, 5);
 
         Observable<String> mapped = ints1
+                .onBackpressureBuffer()
                 .concatMap(i -> interval(1, SECONDS)
                         .take(5)
                         .map(t -> i + " / " + t));

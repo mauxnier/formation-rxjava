@@ -9,6 +9,7 @@ import rx.Observable;
 import rx.Scheduler;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static fr.sii.rxjava.util.Cmd.addText;
 import static fr.sii.rxjava.util.MainFrame.startApp;
@@ -21,6 +22,14 @@ public class Ex015_DrawPointsOnMouseLocationEverySecond implements MainFrame.App
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return Observable.interval(1, SECONDS)
+                .withLatestFrom(in.mouseXY(), (i,m) -> m)
+                .map(p -> addText(p, "x:" + p.x + ", y:" + p.y));
+
+//        return in.mouseXY()
+//                .sample(1, SECONDS)
+//                .map(p -> addText(p, "x:" + p.x + ", y:" + p.y));
     }
 }

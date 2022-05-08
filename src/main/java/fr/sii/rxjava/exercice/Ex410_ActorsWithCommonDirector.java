@@ -34,7 +34,19 @@ public class Ex410_ActorsWithCommonDirector implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        return services.movies().allMovies()
+                .flatMap(m -> zip(
+                        services.movies().getMovieDirector(m.title),
+                        services.movies().getMovieActors(m.title).toList(), T2::t2))
+                .groupBy(T2::_1, T2::_2)
+                .flatMap(actorsObs -> actorsObs
+                        .flatMap(Observable::from)
+                        .distinct()
+                        .toSortedList(byNameThenFirstName::compare)
+                        .map(sortedActors -> t2(actorsObs.getKey(), sortedActors)))
+                .toSortedList(cmpT2::compare)
+                .flatMap(Observable::from)
+                .map(dir_actors -> addLog(directorAndActorsFormater(dir_actors._1, dir_actors._2)));
     }
 
     static String directorAndActorsFormater(Director director, Iterable<Actor> actors) {

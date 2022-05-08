@@ -27,8 +27,20 @@ public class Ex130_ClickCountBySlice implements MainFrame.App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
-                    
+        // return Observable.never();
+
+        return merge(
+                range(0, GROUP_COUNT)
+                        .map(i -> groupLine(i)),
+
+                in.keys()
+                        .withLatestFrom(in.mouseXY(), (c, p) -> p)
+                        .startWith(range(0, GROUP_COUNT).map(i -> pt((0.5 + i) * GROUP_SIZE, 0)))
+                        .groupBy(p -> p.x / GROUP_SIZE)
+                        .filter(groupPtsObs -> groupPtsObs.getKey() < GROUP_COUNT)
+                        .flatMap(groupPtsObs -> groupPtsObs
+                                .zipWith(range(0, Integer.MAX_VALUE), (p, i) -> i)
+                                .map(sum -> groupText(groupPtsObs.getKey(), sum))));
     }
 
     static Command groupText(int groupId, int sum) {return uniq("group-id-" + groupId, addText(groupId * GROUP_SIZE + 10, 300, "" + sum));}

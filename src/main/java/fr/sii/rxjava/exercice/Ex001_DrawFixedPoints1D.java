@@ -19,6 +19,10 @@ public class Ex001_DrawFixedPoints1D implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return Observable.never();
+        // return Observable.never();
+
+        return range(0, 20)
+                .map(t -> pt(100 + 20 * t, 100))
+                .map(Cmd::addPt);
     }
 }
