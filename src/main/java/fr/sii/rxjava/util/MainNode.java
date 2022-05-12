@@ -3,6 +3,7 @@ package fr.sii.rxjava.util;
 import fr.sii.rxjava.util.cmds.Drawings;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -32,28 +33,9 @@ public class MainNode extends StackPane implements Inputs {
         this.minHeight(800);
         canvas = new Canvas(800, 800);
         getChildren().setAll(canvas);
+
     }
 
-//    public final JPanel wall = new JPanel() {
-//
-//        @Override
-//        protected void paintComponent(Graphics g) {
-//            Graphics2D g2d = (Graphics2D) g;
-//this.set
-//            g2d.setColor(WHITE);
-//            g2d.fill(getBounds());
-//
-//            if (drawingsSubject.hasValue()) {
-//                g2d.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-//                g2d.setRenderingHint(KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON);
-//
-//                g2d.setFont(g2d.getFont().deriveFont(Font.BOLD, 18));
-//                g2d.setStroke(new BasicStroke(3, CAP_ROUND, JOIN_ROUND));
-//
-//                drawingsSubject.getValue().drawAll(drawing -> drawing.call(g2d));
-//            }
-//        }
-//    };
 
 
     private void draw(Drawings drawings) {
@@ -69,15 +51,15 @@ public class MainNode extends StackPane implements Inputs {
 
     public void startApp(App app) {
         System.out.println("Demarrage de l'application: " + app.getClass().getSimpleName() + "...");
-
         final Services services = new ServicesImpl();
-
-        appSubscription = app.commands(this, services, JavaFxScheduler.platform())
+        appSubscription = Observable.defer(() ->app.commands(this, services, JavaFxScheduler.platform()))
+                .subscribeOn(Schedulers.computation())
                 .startWith(Observable.fromIterable(app.description()).map(Cmd::addLog))
                 .concatWith(Observable.timer(3, SECONDS).flatMap(v -> Observable.empty()))
                 .serialize()
                 .scan(Drawings.empty(), (drawings, cmd) -> cmd.apply(drawings, cmd.getDrawing()))
                 .sample(40, MILLISECONDS)
+                .observeOn(JavaFxScheduler.platform())
                 .subscribe(this::draw,
                         ex -> {
                             System.out.println("Error ! :-(");
@@ -126,8 +108,8 @@ public class MainNode extends StackPane implements Inputs {
     @Override
     @Contract(pure = true)
     public Observable<Character> keys() {
-        return JavaFxObservable.eventsOf(this, KeyEvent.KEY_PRESSED)
-                .map(e -> e.getCharacter().charAt(0));
+        return JavaFxObservable.eventsOf(this.getScene(), KeyEvent.KEY_PRESSED)
+                .map(e -> e.getText().charAt(0));
     }
 
 
