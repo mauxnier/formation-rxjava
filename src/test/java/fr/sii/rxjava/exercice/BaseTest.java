@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -52,7 +52,7 @@ public class BaseTest {
 
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         inputs = TestInputs.create(testScheduler);
         inputPusher = inputs;

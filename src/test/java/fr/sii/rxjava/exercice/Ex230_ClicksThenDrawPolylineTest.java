@@ -1,8 +1,8 @@
 package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.Pt;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.util.Cmd.addLine;
 import static fr.sii.rxjava.util.Cmd.addPt;
@@ -12,7 +12,7 @@ import static javafx.scene.paint.Color.*;
 public class Ex230_ClicksThenDrawPolylineTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex230_ClicksThenDrawPolyline.class);
 

@@ -1,7 +1,7 @@
 package fr.sii.rxjava.exercice;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.data.TestMovieServices.allActors;
 import static fr.sii.rxjava.exercice.Ex420_SearchMovies.*;
@@ -16,7 +16,7 @@ public class Ex420_SearchMoviesTest extends BaseTest {
     static final String DUJARDIN = "dujardin";
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex420_SearchMovies.class);
 

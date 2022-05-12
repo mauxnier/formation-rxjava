@@ -1,6 +1,6 @@
 package fr.sii.rxjava.exercice;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.exercice.Ex070_Waves.wave;
 import static fr.sii.rxjava.util.Pt.pt;

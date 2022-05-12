@@ -2,8 +2,8 @@ package fr.sii.rxjava.exercice;
 
 import com.google.common.collect.ImmutableList;
 import fr.sii.rxjava.util.cmds.Command;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.exercice.Ex710_NumbersLikeMusicScore.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -11,7 +11,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class Ex710_NumbersLikeMusicScoreTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex710_NumbersLikeMusicScore.class);
 

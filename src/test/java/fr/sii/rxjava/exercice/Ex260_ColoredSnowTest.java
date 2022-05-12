@@ -6,8 +6,8 @@ import fr.sii.rxjava.util.cmds.Command;
 import fr.sii.rxjava.util.cmds.GroupCmd;
 import fr.sii.rxjava.util.cmds.UniqCmd;
 import javafx.scene.paint.Color;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
 
@@ -16,13 +16,13 @@ import static fr.sii.rxjava.util.Cmd.removeUniq;
 import static fr.sii.rxjava.util.Pt.pt;
 import static io.reactivex.rxjava3.core.Observable.fromIterable;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Ex260_ColoredSnowTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex260_ColoredSnow.class);
 

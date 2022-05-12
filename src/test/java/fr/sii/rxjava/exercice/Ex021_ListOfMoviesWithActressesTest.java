@@ -2,7 +2,7 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.data.Movie;
 import fr.sii.rxjava.util.Cmd;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.data.Actor.Sex.f;
 import static fr.sii.rxjava.data.TestMovieServices.allMovies;

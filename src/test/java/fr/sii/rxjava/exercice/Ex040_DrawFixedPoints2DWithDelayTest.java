@@ -1,7 +1,7 @@
 package fr.sii.rxjava.exercice;
 
 import io.reactivex.rxjava3.core.Observable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

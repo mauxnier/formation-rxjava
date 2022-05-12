@@ -1,13 +1,13 @@
 package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.cmds.Command;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.exercice.Ex210_DoubleKeyDuration.TIME_PT;
 import static fr.sii.rxjava.exercice.Ex210_DoubleKeyDuration.timeCmd;
 import static io.reactivex.rxjava3.core.Observable.fromIterable;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Ex210_DoubleKeyDurationTest extends BaseTest {
 

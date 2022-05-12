@@ -1,8 +1,8 @@
 package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.Pt;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.exercice.Ex110_ClickColorNames.addLetter;
 import static fr.sii.rxjava.util.Cmd.addPt;
@@ -14,7 +14,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class Ex110_ClickColorNamesTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex110_ClickColorNames.class);
 

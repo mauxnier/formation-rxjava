@@ -2,7 +2,7 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.Cmd;
 import fr.sii.rxjava.util.T2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.data.Movie.CHRONO;
 import static fr.sii.rxjava.data.TestMovieServices.allMovies;

@@ -2,8 +2,8 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.cmds.AddLogCmd;
 import fr.sii.rxjava.util.cmds.UniqCmd;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ import static fr.sii.rxjava.exercice.Ex700_ClickThenKey.*;
 import static io.reactivex.rxjava3.core.Observable.fromIterable;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Ex700_ClickThenKeyTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testPerdu() throws Exception {
         testSetupFor(Ex700_ClickThenKey.class);
 
@@ -43,7 +43,7 @@ public class Ex700_ClickThenKeyTest extends BaseTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testGagne() throws Exception {
         testSetupFor(Ex700_ClickThenKey.class);
 

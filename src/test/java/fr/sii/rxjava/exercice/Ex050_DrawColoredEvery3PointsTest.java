@@ -1,7 +1,8 @@
 package fr.sii.rxjava.exercice;
 
-import org.junit.Ignore;
-import org.junit.Test;
+//import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.util.Cmd.addPt;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -9,7 +10,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class Ex050_DrawColoredEvery3PointsTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex050_DrawColoredEvery3Points.class);
 

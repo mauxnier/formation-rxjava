@@ -1,6 +1,6 @@
 package fr.sii.rxjava.exercice;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.data.TestMovieServices.allMovies;
 import static java.util.concurrent.TimeUnit.MINUTES;

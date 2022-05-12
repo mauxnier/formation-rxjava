@@ -1,7 +1,8 @@
 package fr.sii.rxjava.exercice;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static fr.sii.rxjava.exercice.Ex130_ClickCountBySlice.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -10,7 +11,7 @@ import static java.util.stream.IntStream.range;
 public class Ex130_ClickCountBySliceTest extends BaseTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testCommands() throws Exception {
         testSetupFor(Ex130_ClickCountBySlice.class);
 
