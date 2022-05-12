@@ -10,7 +10,7 @@ public final class NoOpCmd extends BaseCmd {
 
     @Override
     @Contract(pure = true)
-    public Drawings call(Drawings drawings, Drawing newDrawing) {
+    public Drawings apply(Drawings drawings, Drawing newDrawing) {
         return drawings;
     }
 

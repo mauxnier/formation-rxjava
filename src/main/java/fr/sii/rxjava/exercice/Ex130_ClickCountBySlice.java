@@ -1,28 +1,30 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static fr.sii.rxjava.util.Pt.pt;
+import static io.reactivex.rxjava3.core.Observable.merge;
+import static io.reactivex.rxjava3.core.Observable.range;
 import static java.util.Collections.singletonList;
-import static rx.Observable.merge;
-import static rx.Observable.range;
 
-public class Ex130_ClickCountBySlice implements MainFrame.App {
+public class Ex130_ClickCountBySlice implements App {
 
     static final int GROUP_SIZE = 50;
     static final int GROUP_COUNT = 10;
 
-    public static void main(String... args) { startApp(new Ex130_ClickCountBySlice()); }
+    public static void main(String... args) {
+        startApp(new Ex130_ClickCountBySlice());
+    }
 
     @Override
     @Contract(pure = true)
@@ -31,7 +33,7 @@ public class Ex130_ClickCountBySlice implements MainFrame.App {
 
         return merge(
                 range(0, GROUP_COUNT)
-                        .map(i -> groupLine(i)),
+                        .map(Ex130_ClickCountBySlice::groupLine),
 
                 in.keys()
                         .withLatestFrom(in.mouseXY(), (c, p) -> p)
@@ -43,9 +45,13 @@ public class Ex130_ClickCountBySlice implements MainFrame.App {
                                 .map(sum -> groupText(groupPtsObs.getKey(), sum))));
     }
 
-    static Command groupText(int groupId, int sum) {return uniq("group-id-" + groupId, addText(groupId * GROUP_SIZE + 10, 300, "" + sum));}
+    static Command groupText(int groupId, int sum) {
+        return uniq("group-id-" + groupId, addText(groupId * GROUP_SIZE + 10, 300, "" + sum));
+    }
 
-    static Command groupLine(int group) {return addLine((group + 1) * GROUP_SIZE, 0, (group + 1) * GROUP_SIZE, 300);}
+    static Command groupLine(int group) {
+        return addLine((group + 1) * GROUP_SIZE, 0, (group + 1) * GROUP_SIZE, 300);
+    }
 
     @Override
     public List<String> description() {

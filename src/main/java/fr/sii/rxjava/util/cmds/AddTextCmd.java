@@ -1,6 +1,6 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,14 +21,24 @@ public final class AddTextCmd extends BaseCmd {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AddTextCmd addTextCmd = (AddTextCmd) o;
 
-        if (Double.compare(addTextCmd.x, x) != 0) { return false; }
-        if (Double.compare(addTextCmd.y, y) != 0) { return false; }
-        if (!text.equals(addTextCmd.text)) { return false; }
+        if (Double.compare(addTextCmd.x, x) != 0) {
+            return false;
+        }
+        if (Double.compare(addTextCmd.y, y) != 0) {
+            return false;
+        }
+        if (!text.equals(addTextCmd.text)) {
+            return false;
+        }
         return color.equals(addTextCmd.color);
     }
 

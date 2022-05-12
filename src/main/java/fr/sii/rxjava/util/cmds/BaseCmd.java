@@ -1,8 +1,7 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
-import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 public abstract class BaseCmd implements Command {
@@ -17,11 +16,14 @@ public abstract class BaseCmd implements Command {
     }
 
     @Override
-    public Drawings call(Drawings drawings, Drawing drawing) {
+    public Drawings apply(Drawings drawings, Drawing drawing) {
         return drawings.append(drawing);
     }
 
     protected static String colorHex(Color c) {
-        return format("#%06X", (0xFFFFFF & c.getRGB()));
+        return  String.format( "#%02X%02X%02X",
+                (int)( c.getRed() * 255 ),
+                (int)( c.getGreen() * 255 ),
+                (int)( c.getBlue() * 255 ) );
     }
 }

@@ -1,7 +1,7 @@
 package fr.sii.rxjava.util.cmds;
 
 import static fr.sii.rxjava.util.Cmd.addLog;
-import static java.awt.Color.RED;
+import static javafx.scene.paint.Color.RED;
 
 public final class ClearCmd implements Command {
     public final static ClearCmd INSTANCE = new ClearCmd();
@@ -10,8 +10,8 @@ public final class ClearCmd implements Command {
     }
 
     @Override
-    public Drawings call(Drawings drawings, Drawing drawing) {
-        return addLog("Cleared", RED).call(Drawings.empty(), drawing);
+    public Drawings apply(Drawings drawings, Drawing drawing) {
+        return addLog("Cleared", RED).apply(Drawings.empty(), drawing);
     }
 
     @Override

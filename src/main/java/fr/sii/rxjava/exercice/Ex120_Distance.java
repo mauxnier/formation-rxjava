@@ -1,20 +1,22 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Cmd;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import static fr.sii.rxjava.util.MainFrame.startApp;
-import static rx.Observable.merge;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.merge;
 
-public class Ex120_Distance implements MainFrame.App {
+public class Ex120_Distance implements App {
 
-    public static void main(String... args) { startApp(new Ex120_Distance()); }
+    public static void main(String... args) {
+        startApp(new Ex120_Distance());
+    }
 
     @Override
     @Contract(pure = true)

@@ -1,30 +1,28 @@
 package fr.sii.rxjava.exercice;
 
-import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.Pt;
-import fr.sii.rxjava.util.Services;
-import fr.sii.rxjava.util.T2;
+import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import javafx.scene.paint.Color;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import java.awt.*;
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.*;
 import static java.lang.Math.*;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.*;
 
 public class Ex260_ColoredSnow implements App {
 
     static final int RAYS_COUNT = 19;
 
-    public static void main(String... args) { startApp(new Ex260_ColoredSnow()); }
+    public static void main(String... args) {
+        startApp(new Ex260_ColoredSnow());
+    }
 
     @Override
     @Contract(pure = true)
@@ -33,13 +31,13 @@ public class Ex260_ColoredSnow implements App {
 
         return in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                 .flatMap(p_couleur -> {
                     String id = snowFlakeId(p_couleur._1);
 
                     return interval(40, MILLISECONDS)
                             .takeWhile(t -> t <= 255L)
-                            .flatMap(t -> {
+                            .flatMapSingle(t -> {
                                 Pt center = p_couleur._1.move(0, 2 * t);
 
                                 return range(0, RAYS_COUNT)
@@ -52,7 +50,9 @@ public class Ex260_ColoredSnow implements App {
                 });
     }
 
-    static String snowFlakeId(Pt p) {return "snow-flake-" + p;}
+    static String snowFlakeId(Pt p) {
+        return "snow-flake-" + p;
+    }
 
     static Pt snowFlake(Pt p, int i, long t) {
         double d = 50 + 25 * sin(t / 10.0);
@@ -64,7 +64,7 @@ public class Ex260_ColoredSnow implements App {
         double r = (255 - color.getRed()) * (t / 255.0) + color.getRed();
         double g = (255 - color.getGreen()) * (t / 255.0) + color.getGreen();
         double b = (255 - color.getBlue()) * (t / 255.0) + color.getBlue();
-        return new Color((int) r, (int) g, (int) b);
+        return Color.rgb((int) r, (int) g, (int) b);
     }
 
     @Override

@@ -1,9 +1,8 @@
 package fr.sii.rxjava.util.cmds;
 
-import rx.functions.Func2;
+import java.util.function.BiFunction;
 
-@FunctionalInterface
-public interface Command extends Func2<Drawings, Drawing, Drawings> {
+public interface Command extends BiFunction<Drawings, Drawing, Drawings> {
 
     Drawing EMPTY_DRAWING = ctx -> {
     };

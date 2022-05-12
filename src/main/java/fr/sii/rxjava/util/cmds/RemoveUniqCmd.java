@@ -13,7 +13,7 @@ public final class RemoveUniqCmd extends BaseCmd {
     }
 
     @Override
-    public Drawings call(Drawings drawings, Drawing drawing) {
+    public Drawings apply(Drawings drawings, Drawing drawing) {
         return drawings.filter(d -> !(d instanceof UniqDrawing) || !((UniqDrawing) d).id.equals(id));
     }
 

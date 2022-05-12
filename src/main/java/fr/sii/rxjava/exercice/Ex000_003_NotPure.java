@@ -1,6 +1,6 @@
 package fr.sii.rxjava.exercice;
 
-import rx.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

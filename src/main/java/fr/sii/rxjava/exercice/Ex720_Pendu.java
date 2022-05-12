@@ -1,31 +1,30 @@
 package fr.sii.rxjava.exercice;
 
 import com.google.common.collect.ImmutableList;
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Pt;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import java.awt.*;
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static fr.sii.rxjava.util.Pt.pt;
 import static fr.sii.rxjava.util.Utils.imList;
-import static java.awt.Color.*;
+import static io.reactivex.rxjava3.core.Observable.*;
 import static java.lang.Math.*;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.joining;
-import static rx.Observable.*;
+import static javafx.scene.paint.Color.*;
 
-public class Ex720_Pendu implements MainFrame.App, Consts {
+public class Ex720_Pendu implements App, Consts {
 
     static final String LETTER_ID = "letter";
 
@@ -34,7 +33,9 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
 
     static final ImmutableList<Observable<Command>> BODY_PARTS = imList(gallows(), head(), body(), leftArm(), rightArm(), leftLeg(), rightLeg());
 
-    public static void main(String... args) { startApp(new Ex720_Pendu()); }
+    public static void main(String... args) {
+        startApp(new Ex720_Pendu());
+    }
 
     @Override
     @Contract(pure = true)
@@ -47,7 +48,7 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
                                 .distinct()
                                 .scan(new State(mot), State::update)
                                 .skip(1)
-                                .takeUntil(c -> c.isEnd())
+                                .takeUntil((State c) -> c.isEnd())
                                 .flatMap(s -> s.cmds))
                         .concatWith(just(clear()).delay(3, SECONDS)));
     }
@@ -57,9 +58,13 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
         return singletonList("Cliquez pour commencer...");
     }
 
-    static String discover(String mot, String chars) { return mot.chars().mapToObj(c -> (chars.indexOf(c) == -1 ? '_' : (char) c) + " ").collect(joining()); }
+    static String discover(String mot, String chars) {
+        return mot.chars().mapToObj(c -> (chars.indexOf(c) == -1 ? '_' : (char) c) + " ").collect(joining());
+    }
 
-    static Observable<Command> text(String mot, String keys) {return just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, keys))));}
+    static Observable<Command> text(String mot, String keys) {
+        return just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, keys))));
+    }
 
     static class State {
         final String mot;
@@ -76,7 +81,9 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
             this.cmds = cmds;
         }
 
-        State(String mot) { this(mot, "", 0, 0, empty()); }
+        State(String mot) {
+            this(mot, "", 0, 0, empty());
+        }
 
         State update(char chaR) {
             int found = (int) mot.chars().filter(c -> c == chaR).count();
@@ -94,11 +101,13 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
             return new State(mot, newChars, newGoods, newBads, newCmds);
         }
 
-        boolean isEnd() {return goods == mot.length() || bads == BODY_PARTS.size();}
+        boolean isEnd() {
+            return goods == mot.length() || bads == BODY_PARTS.size();
+        }
     }
 
     static Observable<Command> gallows() {
-        return merge(
+        return mergeArray(
                 line("gallows-base", pt(400, 400), pt(500, 400)),
                 line("gallows-vertical", pt(450, 400), pt(450, 10)),
                 line("gallows-high", pt(450, 10), pt(280, 10)),
@@ -106,15 +115,25 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
                 line("gallows-rope", pt(300, 10), pt(300, 50)));
     }
 
-    static Observable<Command> body() { return line("body", pt(300, 110), pt(300, 230)); }
+    static Observable<Command> body() {
+        return line("body", pt(300, 110), pt(300, 230));
+    }
 
-    static Observable<Command> leftArm() { return member("left-arm", pt(300, 130), pt(270, 210)); }
+    static Observable<Command> leftArm() {
+        return member("left-arm", pt(300, 130), pt(270, 210));
+    }
 
-    static Observable<Command> rightArm() { return member("right-arm", pt(300, 130), pt(330, 210)); }
+    static Observable<Command> rightArm() {
+        return member("right-arm", pt(300, 130), pt(330, 210));
+    }
 
-    static Observable<Command> leftLeg() { return member("left-leg", pt(300, 230), pt(290, 310)); }
+    static Observable<Command> leftLeg() {
+        return member("left-leg", pt(300, 230), pt(290, 310));
+    }
 
-    static Observable<Command> rightLeg() { return member("right-leg", pt(300, 230), pt(310, 310)); }
+    static Observable<Command> rightLeg() {
+        return member("right-leg", pt(300, 230), pt(310, 310));
+    }
 
     static Observable<Command> head() {
         return merge(
@@ -124,9 +143,13 @@ public class Ex720_Pendu implements MainFrame.App, Consts {
                 .concatWith(delayedPt(300, 80, RED));
     }
 
-    static Observable<Command> member(String id, Pt a, Pt b) {return concat(line(id, a, b), delayedPt(b.x, b.y, BLACK));}
+    static Observable<Command> member(String id, Pt a, Pt b) {
+        return concat(line(id, a, b), delayedPt(b.x, b.y, BLACK));
+    }
 
-    static Observable<Command> delayedPt(int x, int y, Color c) { return just(addPt(x, y, c)).delay(500, MILLISECONDS); }
+    static Observable<Command> delayedPt(int x, int y, javafx.scene.paint.Color c) {
+        return just(addPt(x, y, c)).delay(500, MILLISECONDS);
+    }
 
     static Observable<Command> circle(Pt center, int radius) {
         return interval(40, MILLISECONDS)

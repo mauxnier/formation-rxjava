@@ -1,6 +1,8 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import java.util.Map;
 
 import static fr.sii.rxjava.util.Utils.*;
@@ -19,7 +21,7 @@ public final class AddLogCmd extends BaseCmd {
     }
 
     @Override
-    public Drawings call(Drawings drawings, Drawing newDrawing) {
+    public Drawings apply(Drawings drawings, Drawing newDrawing) {
         Map<Boolean, java.util.List<Drawing>> logs = drawings.values().stream().collect(partitioningBy(LogDrawing.class::isInstance));
 
         return new Drawings(
@@ -36,12 +38,18 @@ public final class AddLogCmd extends BaseCmd {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AddLogCmd addLogCmd = (AddLogCmd) o;
 
-        if (!msg.equals(addLogCmd.msg)) { return false; }
+        if (!msg.equals(addLogCmd.msg)) {
+            return false;
+        }
         return color.equals(addLogCmd.color);
     }
 
@@ -73,9 +81,9 @@ public final class AddLogCmd extends BaseCmd {
         }
 
         @Override
-        public void call(Graphics2D g) {
-            g.setColor(color);
-            g.drawString(msg, 3, 17 * y);
+        public void accept(GraphicsContext g) {
+            g.setFill(color);
+            g.fillText(msg, 3, 17 * y);
         }
     }
 }

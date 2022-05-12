@@ -1,26 +1,25 @@
 package fr.sii.rxjava.exercice;
 
 import com.google.common.collect.ImmutableList;
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Pt;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import javafx.scene.paint.Color;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import java.util.Collections;
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.addLine;
 import static fr.sii.rxjava.util.Cmd.uniq;
-import static fr.sii.rxjava.util.MainFrame.startApp;
-import static java.awt.Color.RED;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class Ex080_MonoPong implements MainFrame.App {
+public class Ex080_MonoPong implements App {
 
     static final int LEN = 400;
     static final int MIN = 50;
@@ -32,7 +31,9 @@ public class Ex080_MonoPong implements MainFrame.App {
 
     static final int RACKET = 100;
 
-    public static void main(String... args) { startApp(new Ex080_MonoPong()); }
+    public static void main(String... args) {
+        startApp(new Ex080_MonoPong());
+    }
 
     @Override
     @Contract(pure = true)
@@ -41,13 +42,13 @@ public class Ex080_MonoPong implements MainFrame.App {
 
         return in.mouseXY()
                 .map(Pt::x)
-                .startWith(0)
+                .startWithItem(0)
                 .flatMapIterable(x -> racketCmds(x))
-                .startWith(
-                        addLine(MIN, MIN, MAX, MIN, RED),
-                        addLine(MAX, MIN, MAX, MAX, RED),
-                        addLine(MAX, MAX, MIN, MAX, RED),
-                        addLine(MIN, MAX, MIN, MIN, RED)
+                .startWithArray(
+                        addLine(MIN, MIN, MAX, MIN, Color.RED),
+                        addLine(MAX, MIN, MAX, MAX, Color.RED),
+                        addLine(MAX, MAX, MIN, MAX, Color.RED),
+                        addLine(MIN, MAX, MIN, MIN, Color.RED)
                 );
     }
 

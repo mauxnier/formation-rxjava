@@ -1,8 +1,8 @@
 package fr.sii.rxjava.util.cmds;
 
-import rx.functions.Action1;
+import javafx.scene.canvas.GraphicsContext;
 
-import java.awt.*;
+import java.util.function.Consumer;
 
-public interface Drawing extends Action1<Graphics2D> {
+public interface Drawing extends Consumer<GraphicsContext> {
 }

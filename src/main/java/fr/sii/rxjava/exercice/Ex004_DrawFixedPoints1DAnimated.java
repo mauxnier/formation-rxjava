@@ -1,22 +1,24 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Cmd;
 import fr.sii.rxjava.util.Inputs;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static fr.sii.rxjava.util.Pt.pt;
+import static io.reactivex.rxjava3.core.Observable.interval;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.interval;
 
 public class Ex004_DrawFixedPoints1DAnimated implements App {
 
-    public static void main(String... args) { startApp(new Ex004_DrawFixedPoints1DAnimated()); }
+    public static void main(String... args) {
+        startApp(new Ex004_DrawFixedPoints1DAnimated());
+    }
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {

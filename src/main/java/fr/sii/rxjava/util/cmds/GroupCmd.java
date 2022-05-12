@@ -1,9 +1,9 @@
 package fr.sii.rxjava.util.cmds;
 
 import com.google.common.collect.ImmutableList;
+import javafx.scene.canvas.GraphicsContext;
 import org.jetbrains.annotations.Contract;
 
-import java.awt.*;
 import java.util.Collection;
 
 import static fr.sii.rxjava.util.Utils.imCopyOf;
@@ -45,8 +45,8 @@ public final class GroupCmd extends BaseCmd {
         public GroupDrawing(ImmutableList<Drawing> drawings) {this.drawings = new Drawings(drawings);}
 
         @Override
-        public void call(Graphics2D g) {
-            drawings.drawAll(d -> d.call(g));
+        public void accept(GraphicsContext g) {
+            drawings.drawAll(d -> d.accept(g));
         }
     }
 }

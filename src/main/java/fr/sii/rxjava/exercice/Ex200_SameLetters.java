@@ -1,24 +1,25 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Cmd;
 import fr.sii.rxjava.util.Inputs;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.merge;
 import static java.util.Collections.singletonList;
-import static rx.Observable.just;
-import static rx.Observable.merge;
 
 public class Ex200_SameLetters implements App, Consts {
 
-    public static void main(String... args) { startApp(new Ex200_SameLetters()); }
+    public static void main(String... args) {
+        startApp(new Ex200_SameLetters());
+    }
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
@@ -30,8 +31,9 @@ public class Ex200_SameLetters implements App, Consts {
 
         Observable<Command> gameResult = chars.zipWith(in.keys(), (rndChar, key) -> rndChar.equals(key))
                 .takeUntil(v -> !v)
-                .last()
+                .lastElement()
                 .map(lastEquals -> lastEquals ? GAGNE : PERDU)
+                .toObservable()
                 .share();
 
         return merge(

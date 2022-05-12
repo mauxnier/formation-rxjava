@@ -2,15 +2,13 @@ package fr.sii.rxjava.util;
 
 import com.google.common.collect.Lists;
 import fr.sii.rxjava.data.MovieServices;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
 
 import static com.google.common.base.Preconditions.checkState;
 import static fr.sii.rxjava.util.Utils.slow;
 import static fr.sii.rxjava.util.Utils.toImList;
-import static rx.Observable.from;
-import static rx.Observable.just;
-import static rx.schedulers.Schedulers.io;
 
 public interface Services {
 
@@ -25,32 +23,32 @@ public interface Services {
     default Observable<Character> stringCapitalise(String s) {
         checkState(s.length() > 0);
 
-        return from(s.chars().mapToObj(v -> (char) v).collect(toImList()))
-                .subscribeOn(io())
+        return Observable.fromIterable(s.chars().mapToObj(v -> (char) v).collect(toImList()))
+                .subscribeOn(Schedulers.io())
                 .skip(1)
-                .map(value -> new Character((char) value))
                 .compose(slow())
-                .startWith(just(s.charAt(0)).map(Character::toUpperCase));
+                .startWith(Observable.just(s.charAt(0)).map(Character::toUpperCase));
     }
 
     @Contract(pure = true)
     default Observable<Character> chars(String s) {
-        return from(s.chars().mapToObj(v -> (char) v).collect(toImList()))
-                .subscribeOn(io())
-                .map(value -> new Character((char) value))
+        return Observable.fromIterable(s.chars().mapToObj(v -> (char) v).collect(toImList()))
+                .subscribeOn(Schedulers.io())
                 .compose(slow());
     }
 
     @Contract(pure = true)
     default <T> Observable<T> reverse(Iterable<T> values) {
-        return from(values)
-                .subscribeOn(io())
+        return Observable.fromIterable(values)
+                .subscribeOn(Schedulers.io())
                 .toList()
-                .flatMapIterable(Lists::reverse)
+                .flatMapObservable(l -> Observable.fromIterable(Lists.reverse(l)))
                 .compose(slow());
     }
 
     Observable<Character> randomChars();
 
-    default MovieServices movies() {return new MovieServices();}
+    default MovieServices movies() {
+        return new MovieServices();
+    }
 }

@@ -2,24 +2,25 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.addPt;
 import static fr.sii.rxjava.util.Cmd.uniq;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.*;
 import static java.lang.Math.*;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.*;
 
 public class Ex070_Waves implements App {
 
-    public static void main(String... args) { startApp(new Ex070_Waves()); }
+    public static void main(String... args) {
+        startApp(new Ex070_Waves());
+    }
 
     @Override
     @Contract(pure = true)

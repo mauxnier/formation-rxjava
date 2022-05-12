@@ -3,10 +3,10 @@ package fr.sii.rxjava.exercice;
 import com.google.common.collect.Lists;
 import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 import static fr.sii.rxjava.util.Cmd.clear;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static java.util.Collections.singletonList;
 
-public class Ex1000_FlappyBird implements MainFrame.App, Consts {
+public class Ex1000_FlappyBird implements App, Consts {
 
 
     private static final int H = 784;
@@ -54,7 +54,8 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
         // return Observable.never();
         return input(in)
-                .first()
+                .firstElement()
+                .toObservable()
                 .switchMap(play -> {
 
                     Observable<LinkedBlockingDeque<Pipe>> p = Observable.interval(2, TimeUnit.SECONDS)
@@ -67,8 +68,8 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
                             });
 
                     Observable<PositionAndSpeed> birdPosition = Observable.combineLatest(Observable.interval((long) FPS_TIME, TimeUnit.MILLISECONDS),
-                            input(in)
-                                    .startWith(false), (a, b) -> b)
+                                    input(in)
+                                            .startWithItem(false), (a, b) -> b)
                             .scan(new PositionAndSpeed(INITIAL_ACC, INITIAL_SPEED, CENTER_H), (oldBird, input) -> {
                                 if (input) {
                                     final double newAcc = BOOST_ACC;
@@ -90,10 +91,10 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
                             });
 
                     return Observable.combineLatest(birdPosition, backgroundPosition,
-                            (pos, background) -> new GameContext(background, pos))
+                                    (pos, background) -> new GameContext(background, pos))
                             .takeUntil(this::isGameFinished)
                             .concatMap(gc -> {
-                                final Observable<Command> bck = Observable.from(gc.getPipes())
+                                final Observable<Command> bck = Observable.fromIterable(gc.getPipes())
                                         .concatMap(Pipe::generateCmd);
                                 return Observable.concat(Observable.just(clear()), bck).concatWith(Observable.just(
                                         Cmd.addPt(CENTER_W, gc.getBird().getPosition())
@@ -121,9 +122,9 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
     }
 
     public static class PositionAndSpeed {
-        private double speed;
-        private double acc;
-        private int position;
+        private final double speed;
+        private final double acc;
+        private final int position;
 
         public PositionAndSpeed(double acc, double speed, int position) {
             this.acc = acc;
@@ -145,7 +146,7 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
     }
 
     public static class Pipe {
-        private int hole;
+        private final int hole;
         private int y = W;
 
         public Pipe(int hole) {
@@ -175,8 +176,8 @@ public class Ex1000_FlappyBird implements MainFrame.App, Consts {
     }
 
     public static class GameContext {
-        private List<Pipe> pipes;
-        private PositionAndSpeed bird;
+        private final List<Pipe> pipes;
+        private final PositionAndSpeed bird;
 
         public GameContext(Collection<Pipe> pipes, PositionAndSpeed bird) {
             this.pipes = Lists.newArrayList(pipes);

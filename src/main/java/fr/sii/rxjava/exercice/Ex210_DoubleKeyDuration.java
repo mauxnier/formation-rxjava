@@ -1,31 +1,31 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
 import fr.sii.rxjava.util.Pt;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static fr.sii.rxjava.util.Cmd.addText;
 import static fr.sii.rxjava.util.Cmd.uniq;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static fr.sii.rxjava.util.Pt.pt;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.interval;
 
 public class Ex210_DoubleKeyDuration implements App {
 
     static final Pt TIME_PT = pt(100, 100);
 
-    public static void main(String... args) { startApp(new Ex210_DoubleKeyDuration()); }
+    public static void main(String... args) {
+        startApp(new Ex210_DoubleKeyDuration());
+    }
 
     @Override
     @Contract(pure = true)
@@ -34,11 +34,11 @@ public class Ex210_DoubleKeyDuration implements App {
 
         return in.keys()
                 .scan(false, (acc, key) -> !acc)
-                .switchMap(active ->{
-                    if(active){
+                .switchMap(active -> {
+                    if (active) {
                         return Observable.interval(40, MILLISECONDS)
                                 .timeInterval(scheduler)
-                                .scan(0l, (acc, v) -> acc + v.getIntervalInMilliseconds())
+                                .scan(0l, (acc, v) -> acc + v.time())
                                 .map(time -> timeCmd(TIME_PT, time));
                     }
                     return Observable.empty();
@@ -54,7 +54,9 @@ public class Ex210_DoubleKeyDuration implements App {
 //                        .takeUntil(in.keys()));
     }
 
-    static Command timeCmd(Pt p, long sumTI) {return uniq("time", addText(p, format("%.1f s", sumTI / 1_000.0)));}
+    static Command timeCmd(Pt p, long sumTI) {
+        return uniq("time", addText(p, format("%.1f s", sumTI / 1_000.0)));
+    }
 
     @Override
     public List<String> description() {

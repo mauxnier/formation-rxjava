@@ -1,141 +1,118 @@
 package fr.sii.rxjava;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import fr.sii.rxjava.util.App;
+import fr.sii.rxjava.util.MainNode;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.stream.Stream;
+import java.lang.reflect.InvocationTargetException;
 
-import static com.google.common.base.Throwables.propagate;
 import static java.lang.Class.forName;
-import static java.lang.reflect.Modifier.isPublic;
-import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Comparator.comparing;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
-public class Reponses {
-    public static void main(String... args) throws IOException, ClassNotFoundException, NoSuchMethodException {
-        JFrame frame = new JFrame("Réponses");
-
-        DefaultListModel<Method> model = new DefaultListModel<>();
+public class Reponses extends Application {
 
 
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        ObservableList<App> appList = FXCollections.observableArrayList();
+        ListView<App> listView = new ListView<>(appList);
+        listView.setCellFactory(param -> new AppListCell());
+        Scene scene = new Scene(listView);
+        primaryStage.setScene(scene);
         Lists.newArrayList("fr.sii.rxjava.exercice.Ex000_DrawFixedPoints",
-                "fr.sii.rxjava.exercice.Ex001_DrawFixedPoints1D",
-                "fr.sii.rxjava.exercice.Ex004_DrawFixedPoints1DAnimated",
-                "fr.sii.rxjava.exercice.Ex006_DrawFixedPoints2D",
-                "fr.sii.rxjava.exercice.Ex010_DrawPointsOnMouseLocation",
-                "fr.sii.rxjava.exercice.Ex015_DrawPointsOnMouseLocationEverySecond",
-                "fr.sii.rxjava.exercice.Ex017_DrawPointsWithClear",
-                "fr.sii.rxjava.exercice.Ex020_IsAllMoviesAreAfter70s",
-                "fr.sii.rxjava.exercice.Ex021_ListOfMoviesWithActresses",
-                "fr.sii.rxjava.exercice.Ex040_DrawFixedPoints2DWithDelay",
-                "fr.sii.rxjava.exercice.Ex050_DrawColoredEvery3Points",
-                "fr.sii.rxjava.exercice.Ex052_LettersOrFigures",
-                "fr.sii.rxjava.exercice.Ex060_ClickPolyLine",
-                "fr.sii.rxjava.exercice.Ex070_Waves",
-                "fr.sii.rxjava.exercice.Ex080_MonoPong",
-                "fr.sii.rxjava.exercice.Ex100_SplitWords",
-                "fr.sii.rxjava.exercice.Ex101_SplitWordsByMouse",
-                "fr.sii.rxjava.exercice.Ex110_ClickColorNames",
-                "fr.sii.rxjava.exercice.Ex120_Distance",
-                "fr.sii.rxjava.exercice.Ex130_ClickCountBySlice",
-                "fr.sii.rxjava.exercice.Ex150_DrawPointBetweenLettersAndFigures",
-                "fr.sii.rxjava.exercice.Ex200_SameLetters",
-                "fr.sii.rxjava.exercice.Ex210_DoubleKeyDuration",
-                "fr.sii.rxjava.exercice.Ex230_ClicksThenDrawPolyline",
-                "fr.sii.rxjava.exercice.Ex250_ColoredLetters",
-                "fr.sii.rxjava.exercice.Ex251_ColoredLetters2",
-                "fr.sii.rxjava.exercice.Ex260_ColoredSnow",
-                "fr.sii.rxjava.exercice.Ex400_ListOfMoviesByDirector",
-                "fr.sii.rxjava.exercice.Ex410_ActorsWithCommonDirector",
-                "fr.sii.rxjava.exercice.Ex410_ActorsWithCommonDirectorV2",
-                "fr.sii.rxjava.exercice.Ex420_SearchMovies",
-                "fr.sii.rxjava.exercice.Ex500_Extrapolation",
-                "fr.sii.rxjava.exercice.Ex700_ClickThenKey",
-                "fr.sii.rxjava.exercice.Ex710_NumbersLikeMusicScore",
-                "fr.sii.rxjava.exercice.Ex720_Pendu",
-                "fr.sii.rxjava.exercice.Ex1000_FlappyBird")
+                        "fr.sii.rxjava.exercice.Ex001_DrawFixedPoints1D",
+                        "fr.sii.rxjava.exercice.Ex004_DrawFixedPoints1DAnimated",
+                        "fr.sii.rxjava.exercice.Ex006_DrawFixedPoints2D",
+                        "fr.sii.rxjava.exercice.Ex010_DrawPointsOnMouseLocation",
+                        "fr.sii.rxjava.exercice.Ex015_DrawPointsOnMouseLocationEverySecond",
+                        "fr.sii.rxjava.exercice.Ex017_DrawPointsWithClear",
+                        "fr.sii.rxjava.exercice.Ex020_IsAllMoviesAreAfter70s",
+                        "fr.sii.rxjava.exercice.Ex021_ListOfMoviesWithActresses",
+                        "fr.sii.rxjava.exercice.Ex040_DrawFixedPoints2DWithDelay",
+                        "fr.sii.rxjava.exercice.Ex050_DrawColoredEvery3Points",
+                        "fr.sii.rxjava.exercice.Ex052_LettersOrFigures",
+                        "fr.sii.rxjava.exercice.Ex060_ClickPolyLine",
+                        "fr.sii.rxjava.exercice.Ex070_Waves",
+                        "fr.sii.rxjava.exercice.Ex080_MonoPong",
+                        "fr.sii.rxjava.exercice.Ex100_SplitWords",
+                        "fr.sii.rxjava.exercice.Ex101_SplitWordsByMouse",
+                        "fr.sii.rxjava.exercice.Ex110_ClickColorNames",
+                        "fr.sii.rxjava.exercice.Ex120_Distance",
+                        "fr.sii.rxjava.exercice.Ex130_ClickCountBySlice",
+                        "fr.sii.rxjava.exercice.Ex150_DrawPointBetweenLettersAndFigures",
+                        "fr.sii.rxjava.exercice.Ex200_SameLetters",
+                        "fr.sii.rxjava.exercice.Ex210_DoubleKeyDuration",
+                        "fr.sii.rxjava.exercice.Ex230_ClicksThenDrawPolyline",
+                        "fr.sii.rxjava.exercice.Ex250_ColoredLetters",
+                        "fr.sii.rxjava.exercice.Ex251_ColoredLetters2",
+                        "fr.sii.rxjava.exercice.Ex260_ColoredSnow",
+                        "fr.sii.rxjava.exercice.Ex400_ListOfMoviesByDirector",
+                        "fr.sii.rxjava.exercice.Ex410_ActorsWithCommonDirector",
+                        "fr.sii.rxjava.exercice.Ex410_ActorsWithCommonDirectorV2",
+                        "fr.sii.rxjava.exercice.Ex420_SearchMovies",
+                        "fr.sii.rxjava.exercice.Ex500_Extrapolation",
+                        "fr.sii.rxjava.exercice.Ex700_ClickThenKey",
+                        "fr.sii.rxjava.exercice.Ex710_NumbersLikeMusicScore",
+                        "fr.sii.rxjava.exercice.Ex720_Pendu",
+                        "fr.sii.rxjava.exercice.Ex1000_FlappyBird")
                 .stream()
-                .flatMap(ci -> {
-                    try {
-                        return Stream.of(forName(ci).getDeclaredMethod("main", String[].class))
-                                .filter(m -> isStatic(m.getModifiers()))
-                                .filter(m -> isPublic(m.getModifiers()));
-                    } catch (Throwable e) {
-                        return Stream.empty();
-                    }
-                })
-                .sorted(comparing(m -> m.getDeclaringClass().getName()))
-                .forEach(model::addElement);
+                .map(this::createApp)
+                .sorted(comparing(m -> m.getClass().getName()))
+                .forEach(appList::add);
 
-
-        JList<Method> list = new JList<>(model);
-        frame.setContentPane(new JScrollPane(list));
-
-        list.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() > 1) {
-                    Method methodToRun = list.getSelectedValue();
-
-                    try {
-                        methodToRun.invoke(null, new Object[]{new String[]{}});
-                    } catch (Throwable e1) {
-                        e1.printStackTrace();
-                    }
-                }
+        listView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if(event.getClickCount() == 2 && listView.getSelectionModel().getSelectedItem() != null){
+                open(listView.getSelectionModel().getSelectedItem());
             }
         });
-
-        DefaultListCellRenderer defaultRender = new DefaultListCellRenderer();
-
-        list.setCellRenderer((list1, value, index, isSelected, cellHasFocus) -> {
-            Component c = defaultRender.getListCellRendererComponent(list1, value.getDeclaringClass().getSimpleName(), index, isSelected, cellHasFocus);
-            c.setFont(c.getFont().deriveFont(16f));
-            return c;
-        });
-
-        frame.setMinimumSize(new Dimension(10, 600));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
+        primaryStage.show();
+        primaryStage.toFront();
     }
 
-    @FunctionalInterface
-    interface ExFunction<T, R> {
-        R apply(T t) throws Throwable;
+    private void open(App app){
+        Stage newStage = new Stage();
+        newStage.setTitle(app.getClass().getSimpleName());
+        MainNode node =new MainNode(newStage::close);
+        Scene scene = new Scene(node);
+        newStage.setScene(scene);
+        node.startApp(app);
+        newStage.show();
+        newStage.toFront();
+        newStage.setOnCloseRequest(event -> node.dispose());
     }
 
-    @FunctionalInterface
-    interface ExPredicate<T> {
-        boolean apply(T input) throws Throwable;
+    private App createApp(String appName) {
+        try {
+            Class<?> clazz = forName(appName);
+            return (App) clazz.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    static <T> Predicate<T> propag(ExPredicate<T> p) {
-        return t -> {
-            try {
-                return p.apply(t);
-            } catch (Throwable ex) {
-                throw propagate(ex);
+
+    private class AppListCell extends ListCell<App> {
+
+        @Override
+        protected void updateItem(App app, boolean b) {
+            super.updateItem(app, b);
+            if (!b) {
+                setText(app.getClass().getSimpleName());
+            } else {
+                setText(null);
             }
-        };
+        }
     }
 
-    static <A, B> Function<A, B> propagF(ExFunction<A, B> f) {
-        return a -> {
-            try {
-                return f.apply(a);
-            } catch (Throwable ex) {
-                throw propagate(ex);
-            }
-        };
-    }
 }

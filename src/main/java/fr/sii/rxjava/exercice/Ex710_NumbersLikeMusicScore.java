@@ -1,31 +1,31 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.observables.GroupedObservable;
+import io.reactivex.rxjava3.schedulers.Timed;
+import javafx.scene.paint.Color;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
-import rx.observables.GroupedObservable;
-import rx.schedulers.TimeInterval;
 
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.of;
-import static fr.sii.rxjava.util.Cmd.addPt;
-import static fr.sii.rxjava.util.Cmd.addText;
-import static fr.sii.rxjava.util.Cmd.clear;
-import static fr.sii.rxjava.util.MainFrame.startApp;
-import static java.awt.Color.BLUE;
-import static java.awt.Color.RED;
-import static java.lang.Integer.*;
+import static fr.sii.rxjava.util.Cmd.*;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.*;
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.Collections.singletonList;
-import static rx.Observable.*;
+import static javafx.scene.paint.Color.RED;
 
-public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
+public class Ex710_NumbersLikeMusicScore implements App {
 
-    public static void main(String... args) { startApp(new Ex710_NumbersLikeMusicScore()); }
+    public static void main(String... args) {
+        startApp(new Ex710_NumbersLikeMusicScore());
+    }
 
     @Override
     @Contract(pure = true)
@@ -34,7 +34,7 @@ public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
 
         return in.mouseRightClickCount()
                 .zipWith(range(1, MAX_VALUE), (a, b) -> b)
-                .startWith(0)
+                .startWithItem(0)
                 .switchMap(rc -> in.keys()
                         .filter(c -> c >= '0' && c <= '9')
                         .map(String::valueOf)
@@ -52,7 +52,7 @@ public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
                                     .scan(new ValInfo(), ValInfo::accumulate)
                                     .skip(1)
                                     .flatMapIterable(valInfo -> dot(key, groupInfo, valInfo))
-                                    .startWith(groupTxt(key));
+                                    .startWithItem(groupTxt(key));
                         })
                         .startWith(rc == 0 ? empty() : just(clear()))
                 );
@@ -70,9 +70,9 @@ public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
         long time = gi.sumTI + vi.sumTI;
         long x = 20 + time / 20;
         boolean first = gi.index + vi.index <= 2;
-        Command pt = addPt(x, y, first ? BLUE : RED);
+        Command pt = addPt(x, y, first ? Color.BLUE : RED);
 
-        return first ? of(pt) : of(pt, addText(x - 50, yTxt, "" + (vi.index == 1 ? time : (long) (Long) vi.ti)));
+        return first ? of(pt) : of(pt, addText(x - 50, yTxt, "" + (vi.index == 1 ? time : (Long) vi.ti)));
     }
 
     static int yTxt(int key) {
@@ -107,8 +107,8 @@ public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
             this.index = index;
         }
 
-        GroupeInfo accumulate(TimeInterval<GroupedObservable<Integer, Integer>> v) {
-            return new GroupeInfo(sumTI == Long.MIN_VALUE ? 0 : sumTI + v.getIntervalInMilliseconds(), v.getValue(), index + 1);
+        GroupeInfo accumulate(Timed<GroupedObservable<Integer, Integer>> v) {
+            return new GroupeInfo(sumTI == Long.MIN_VALUE ? 0 : sumTI + v.time(), v.value(), index + 1);
         }
     }
 
@@ -127,8 +127,8 @@ public class Ex710_NumbersLikeMusicScore implements MainFrame.App {
             this.index = index;
         }
 
-        ValInfo accumulate(TimeInterval<Integer> v) {
-            return new ValInfo(sumTI + v.getIntervalInMilliseconds(), v.getIntervalInMilliseconds(), index + 1);
+        ValInfo accumulate(Timed<Integer> v) {
+            return new ValInfo(sumTI + v.time(), v.time(), index + 1);
         }
     }
 }

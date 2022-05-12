@@ -1,6 +1,6 @@
 package fr.sii.rxjava.exercice;
 
-import rx.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 public class Ex000_000_Subscribe {
 

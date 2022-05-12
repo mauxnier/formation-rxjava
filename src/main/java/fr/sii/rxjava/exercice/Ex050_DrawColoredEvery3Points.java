@@ -1,24 +1,28 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Cmd;
 import fr.sii.rxjava.util.Inputs;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.fromArray;
+import static io.reactivex.rxjava3.core.Observable.just;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.*;
+
 
 public class Ex050_DrawColoredEvery3Points implements App {
 
-    public static void main(String... args) { startApp(new Ex050_DrawColoredEvery3Points()); }
+    public static void main(String... args) {
+        startApp(new Ex050_DrawColoredEvery3Points());
+    }
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
@@ -27,11 +31,11 @@ public class Ex050_DrawColoredEvery3Points implements App {
         return
                 in.mouseXY()
                         .sample(100, MILLISECONDS).zipWith(
-                from(Couleur.values())
-                        .map(Couleur::color)
-                        .concatMap(c -> just(c).repeat(3))
-                        .repeat(),
-                Cmd::addPt);
+                                fromArray(Couleur.values())
+                                        .map(Couleur::color)
+                                        .concatMap(c -> just(c).repeat(3))
+                                        .repeat(),
+                                Cmd::addPt);
     }
 
     @Override

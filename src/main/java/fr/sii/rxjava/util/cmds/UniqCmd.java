@@ -1,6 +1,7 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.canvas.GraphicsContext;
+
 import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
@@ -20,7 +21,7 @@ public final class UniqCmd extends BaseCmd {
     public Command getCmd() { return cmd; }
 
     @Override
-    public Drawings call(Drawings drawings, Drawing newDrawing) {
+    public Drawings apply(Drawings drawings, Drawing newDrawing) {
         Predicate<Drawing> notUniqDrawingOrWithDifferentName = a -> !(a instanceof UniqDrawing)
                 || !(newDrawing instanceof UniqDrawing)
                 || (a instanceof UniqDrawing && !((UniqDrawing) a).id.equals(((UniqDrawing) newDrawing).id));
@@ -61,8 +62,8 @@ public final class UniqCmd extends BaseCmd {
         }
 
         @Override
-        public void call(Graphics2D g) {
-            drawing.call(g);
+        public void accept(GraphicsContext g) {
+            drawing.accept(g);
         }
     }
 }

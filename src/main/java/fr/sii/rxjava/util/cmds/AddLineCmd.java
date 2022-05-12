@@ -1,6 +1,6 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,19 +21,33 @@ public final class AddLineCmd extends BaseCmd {
         this.color = requireNonNull(color);
     }
 
-    public Color getColor() { return color; }
+    public Color getColor() {
+        return color;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AddLineCmd addLineCmd = (AddLineCmd) o;
 
-        if (x1 != addLineCmd.x1) { return false; }
-        if (y1 != addLineCmd.y1) { return false; }
-        if (x2 != addLineCmd.x2) { return false; }
-        if (y2 != addLineCmd.y2) { return false; }
+        if (x1 != addLineCmd.x1) {
+            return false;
+        }
+        if (y1 != addLineCmd.y1) {
+            return false;
+        }
+        if (x2 != addLineCmd.x2) {
+            return false;
+        }
+        if (y2 != addLineCmd.y2) {
+            return false;
+        }
         return color.equals(addLineCmd.color);
     }
 

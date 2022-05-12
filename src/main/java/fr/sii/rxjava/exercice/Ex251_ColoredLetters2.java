@@ -1,13 +1,10 @@
 package fr.sii.rxjava.exercice;
 
-import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.Pt;
-import fr.sii.rxjava.util.Services;
-import fr.sii.rxjava.util.T2;
+import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
@@ -15,15 +12,16 @@ import static fr.sii.rxjava.exercice.Ex250_ColoredLetters.endTyping;
 import static fr.sii.rxjava.exercice.Ex250_ColoredLetters.startTyping;
 import static fr.sii.rxjava.util.Cmd.addText;
 import static fr.sii.rxjava.util.Cmd.uniq;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.*;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static rx.Observable.*;
 
 public class Ex251_ColoredLetters2 implements App {
 
-    public static void main(String... args) { startApp(new Ex251_ColoredLetters2()); }
+    public static void main(String... args) {
+        startApp(new Ex251_ColoredLetters2());
+    }
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
@@ -31,9 +29,9 @@ public class Ex251_ColoredLetters2 implements App {
 
         return concat(in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                 .groupJoin(in.keys(),
-                        pac -> in.keys().timeout(2, SECONDS).ignoreElements().onErrorResumeNext(empty()),
+                        pac -> in.keys().timeout(2, SECONDS).ignoreElements().toObservable().onErrorResumeNext(t ->Observable.empty()),
                         c -> empty(),
                         (p_couleur, chars) -> {
                             Pt p = p_couleur._1;

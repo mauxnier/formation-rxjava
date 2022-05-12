@@ -1,28 +1,26 @@
 package fr.sii.rxjava.exercice;
 
-import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.Pt;
-import fr.sii.rxjava.util.Services;
-import fr.sii.rxjava.util.T2;
+import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.fromArray;
+import static io.reactivex.rxjava3.core.Observable.just;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static rx.Observable.from;
-import static rx.Observable.just;
 
 public class Ex250_ColoredLetters implements App {
 
-    public static void main(String... args) { startApp(new Ex250_ColoredLetters()); }
+    public static void main(String... args) {
+        startApp(new Ex250_ColoredLetters());
+    }
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
@@ -30,7 +28,7 @@ public class Ex250_ColoredLetters implements App {
 
         return in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                 .concatMap(p_couleur -> {
                     Pt p = p_couleur._1;
                     Couleur couleur = p_couleur._2;
@@ -41,18 +39,22 @@ public class Ex250_ColoredLetters implements App {
                                     .scan("", (acc, chaR) -> acc + chaR)
                                     .skip(1)
                                     .map(str -> uniq("" + p, addText(p, str, couleur.color)))
-                                    .onErrorResumeNext(e ->{
-                                        if(e instanceof TimeoutException){
-                                            return  just(endTyping(p_couleur._2));
+                                    .onErrorResumeNext(e -> {
+                                        if (e instanceof TimeoutException) {
+                                            return just(endTyping(p_couleur._2));
                                         }
                                         return Observable.error(e);
                                     }));
                 });
     }
 
-    static Command endTyping(Couleur couleur) {return addLog("Fin de saisie en " + couleur.name().toUpperCase() + ", clickez pour une autre saisie");}
+    static Command endTyping(Couleur couleur) {
+        return addLog("Fin de saisie en " + couleur.name().toUpperCase() + ", clickez pour une autre saisie");
+    }
 
-    static Command startTyping(Couleur couleur) {return addLog("Commencez à taper en " + couleur.name().toUpperCase() + "...");}
+    static Command startTyping(Couleur couleur) {
+        return addLog("Commencez à taper en " + couleur.name().toUpperCase() + "...");
+    }
 
     @Override
     public List<String> description() {

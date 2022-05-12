@@ -2,23 +2,25 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import javafx.scene.paint.Color;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.startApp;
-import static java.awt.Color.ORANGE;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.*;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.*;
+import static javafx.scene.paint.Color.ORANGE;
 
-public class Ex500_Extrapolation implements MainFrame.App {
+public class Ex500_Extrapolation implements App {
 
-    public static void main(String... args) { startApp(new Ex500_Extrapolation()); }
+    public static void main(String... args) {
+        startApp(new Ex500_Extrapolation());
+    }
 
     @Override
     @Contract(pure = true)
@@ -30,7 +32,7 @@ public class Ex500_Extrapolation implements MainFrame.App {
                         .withLatestFrom(in.mouseXY(), (clicks, pos) -> pos)
                         .distinctUntilChanged()
                         .buffer(2, 1)
-                        .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                        .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                         .switchMap(pts_color -> {
                             List<Pt> pts = pts_color._1;
                             Pt p1 = pts.get(0);

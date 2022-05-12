@@ -1,6 +1,6 @@
 package fr.sii.rxjava.util.cmds;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,14 +20,24 @@ public final class AddPtCmd extends BaseCmd {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AddPtCmd addPtCmd = (AddPtCmd) o;
 
-        if (Double.compare(addPtCmd.x, x) != 0) { return false; }
-        if (Double.compare(addPtCmd.y, y) != 0) { return false; }
-        if (radius != addPtCmd.radius) { return false; }
+        if (Double.compare(addPtCmd.x, x) != 0) {
+            return false;
+        }
+        if (Double.compare(addPtCmd.y, y) != 0) {
+            return false;
+        }
+        if (radius != addPtCmd.radius) {
+            return false;
+        }
         return color.equals(addPtCmd.color);
     }
 

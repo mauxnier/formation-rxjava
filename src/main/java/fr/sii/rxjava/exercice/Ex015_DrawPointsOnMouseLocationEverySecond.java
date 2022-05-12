@@ -1,23 +1,22 @@
 package fr.sii.rxjava.exercice;
 
+import fr.sii.rxjava.util.App;
 import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.MainFrame;
 import fr.sii.rxjava.util.Services;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
-
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import static fr.sii.rxjava.util.Cmd.addText;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class Ex015_DrawPointsOnMouseLocationEverySecond implements MainFrame.App {
+public class Ex015_DrawPointsOnMouseLocationEverySecond implements App {
 
-    public static void main(String... args) { startApp(new Ex015_DrawPointsOnMouseLocationEverySecond()); }
+    public static void main(String... args) {
+        startApp(new Ex015_DrawPointsOnMouseLocationEverySecond());
+    }
 
     @Override
     @Contract(pure = true)
@@ -25,7 +24,7 @@ public class Ex015_DrawPointsOnMouseLocationEverySecond implements MainFrame.App
         // return Observable.never();
 
         return Observable.interval(1, SECONDS)
-                .withLatestFrom(in.mouseXY(), (i,m) -> m)
+                .withLatestFrom(in.mouseXY(), (i, m) -> m)
                 .map(p -> addText(p, "x:" + p.x + ", y:" + p.y));
 
 //        return in.mouseXY()

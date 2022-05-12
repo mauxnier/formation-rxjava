@@ -2,28 +2,29 @@ package fr.sii.rxjava.exercice;
 
 import fr.sii.rxjava.data.Director;
 import fr.sii.rxjava.util.*;
-import fr.sii.rxjava.util.MainFrame.App;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableTransformer;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static fr.sii.rxjava.data.Director.directorbyNameThenFirstName;
 import static fr.sii.rxjava.util.Cmd.*;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
 import static fr.sii.rxjava.util.Pt.pt;
 import static fr.sii.rxjava.util.Utils.imListOf;
-import static java.awt.Color.BLUE;
-import static java.awt.Color.RED;
+import static io.reactivex.rxjava3.core.Observable.fromIterable;
+import static io.reactivex.rxjava3.core.Observable.range;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.max;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static rx.Observable.*;
+import static javafx.scene.paint.Color.BLUE;
+import static javafx.scene.paint.Color.RED;
 
 public class Ex420_SearchMovies implements App, Consts {
 
@@ -43,7 +44,9 @@ public class Ex420_SearchMovies implements App, Consts {
             addText(DIRECTOR_PT, "Directors:", RED),
             addText(MOVIE_PT, "Movies:", RED));
 
-    public static void main(String... args) { startApp(new Ex420_SearchMovies()); }
+    public static void main(String... args) {
+        startApp(new Ex420_SearchMovies());
+    }
 
     @Override
     @Contract(pure = true)
@@ -56,19 +59,21 @@ public class Ex420_SearchMovies implements App, Consts {
                 .skip(1)
                 .share();
 
-        return merge(
-                from(INIT_CMD),
+        return Observable.mergeArray(
+                fromIterable(INIT_CMD),
 
-                query.map(q -> queryCmd(q)),
+                query.map(Ex420_SearchMovies::queryCmd),
 
                 query.compose(displayDatasAtPt(services.movies().allActors(), ACTOR_PT)),
                 query.compose(displayDatasAtPt(services.movies().allDirectors(), DIRECTOR_PT)),
                 query.compose(displayDatasAtPt(services.movies().allMovies(), MOVIE_PT)));
     }
 
-    static Command queryCmd(String q) {return uniq(QUERY_ID, addText(QUERY_PT, QUERY_PREFIX + q, BLUE));}
+    static Command queryCmd(String q) {
+        return uniq(QUERY_ID, addText(QUERY_PT, QUERY_PREFIX + q, BLUE));
+    }
 
-    static <T> Transformer<String, Command> displayDatasAtPt(Observable<T> src, Pt p) {
+    static <T> ObservableTransformer<String, Command> displayDatasAtPt(Observable<T> src, Pt p) {
         // return Observable.never();
 
         return queryObs -> queryObs
@@ -81,9 +86,13 @@ public class Ex420_SearchMovies implements App, Consts {
                         .map(cmds -> resultGroupCmd(p, cmds)));
     }
 
-    static Command resultGroupCmd(Pt p, List<Command> cmds) {return uniq("" + p, group(cmds));}
+    static Command resultGroupCmd(Pt p, List<Command> cmds) {
+        return uniq("" + p, group(cmds));
+    }
 
-    static <T> Command resultCmd(Pt p, T value, int index) {return addText(p.move(0, index * 20), index + " - " + value);}
+    static <T> Command resultCmd(Pt p, T value, int index) {
+        return addText(p.move(0, index * 20), index + " - " + value);
+    }
 
     @Override
     public List<String> description() {

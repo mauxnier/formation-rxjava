@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Comparator.comparing;
 
 public class Actor {
-    public static enum Sex {m, f}
+    public enum Sex {m, f}
 
     public static Comparator<Actor> byNameThenFirstName = comparing(Actor::name).thenComparing(Actor::fname);
 

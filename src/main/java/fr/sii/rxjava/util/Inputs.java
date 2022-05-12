@@ -1,6 +1,7 @@
 package fr.sii.rxjava.util;
 
-import rx.Observable;
+
+import io.reactivex.rxjava3.core.Observable;
 
 public interface Inputs {
 

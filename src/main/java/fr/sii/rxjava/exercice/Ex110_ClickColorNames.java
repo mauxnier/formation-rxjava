@@ -1,28 +1,26 @@
 package fr.sii.rxjava.exercice;
 
-import fr.sii.rxjava.util.Inputs;
-import fr.sii.rxjava.util.Pt;
-import fr.sii.rxjava.util.Services;
-import fr.sii.rxjava.util.T2;
+import fr.sii.rxjava.util.*;
 import fr.sii.rxjava.util.cmds.Command;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
 import org.jetbrains.annotations.Contract;
-import rx.Observable;
-import rx.Scheduler;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
 import static fr.sii.rxjava.util.Cmd.addPt;
 import static fr.sii.rxjava.util.Cmd.addText;
-import static fr.sii.rxjava.util.MainFrame.App;
-import static fr.sii.rxjava.util.MainFrame.startApp;
+import static fr.sii.rxjava.util.MainApp.startApp;
+import static io.reactivex.rxjava3.core.Observable.fromArray;
+import static io.reactivex.rxjava3.core.Observable.range;
 import static java.util.Collections.singletonList;
-import static rx.Observable.from;
-import static rx.Observable.range;
 
 public class Ex110_ClickColorNames implements App {
 
-    public static void main(String... args) { startApp(new Ex110_ClickColorNames()); }
+    public static void main(String... args) {
+        startApp(new Ex110_ClickColorNames());
+    }
 
     @Override
     @Contract(pure = true)
@@ -31,14 +29,14 @@ public class Ex110_ClickColorNames implements App {
 
         return in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(from(Couleur.values()).repeat(), T2::t2)
+                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                 .flatMap(p_couleur -> {
                     Couleur couleur = p_couleur._2;
                     Pt p = p_couleur._1;
 
                     return services.stringCapitalise(couleur.name())
                             .zipWith(range(1, 100), (chaR, i) -> addLetter(couleur, p, chaR, i))
-                            .startWith(addPt(p, couleur.color));
+                            .startWithItem(addPt(p, couleur.color));
                 });
     }
 
