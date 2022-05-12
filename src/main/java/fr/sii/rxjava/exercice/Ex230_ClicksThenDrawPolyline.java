@@ -27,7 +27,7 @@ public class Ex230_ClicksThenDrawPolyline implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return Observable.just(t2(RED, ORANGE), t2(GREEN, MAGENTA), t2(BLUE, CYAN))
                 .repeat()

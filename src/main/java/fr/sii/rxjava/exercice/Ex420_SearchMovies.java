@@ -51,7 +51,7 @@ public class Ex420_SearchMovies implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         Observable<String> query = in.keys()
                 .map(Character::toLowerCase)
@@ -74,7 +74,7 @@ public class Ex420_SearchMovies implements App, Consts {
     }
 
     static <T> ObservableTransformer<String, Command> displayDatasAtPt(Observable<T> src, Pt p) {
-        // return Observable.never();
+        
 
         return queryObs -> queryObs
                 .debounce(500, MILLISECONDS)

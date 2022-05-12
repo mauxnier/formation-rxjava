@@ -20,7 +20,7 @@ public class Ex006_DrawFixedPoints2D implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return range(0, PTS_BY_SIDE)
                 .flatMap(x -> range(0, PTS_BY_SIDE)

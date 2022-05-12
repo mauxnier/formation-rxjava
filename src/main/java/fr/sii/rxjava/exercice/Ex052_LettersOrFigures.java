@@ -23,7 +23,7 @@ public class Ex052_LettersOrFigures implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return ambArray(
                 in.keys().filter(Character::isLetter),

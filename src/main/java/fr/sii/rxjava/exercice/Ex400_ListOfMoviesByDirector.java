@@ -31,7 +31,7 @@ public class Ex400_ListOfMoviesByDirector implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return services.movies().allMovies()
                 .flatMap(m -> services.movies().getMovieDirector(m.title).map(d -> t2(d, m)))

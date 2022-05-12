@@ -25,7 +25,7 @@ public class Ex150_DrawPointBetweenLettersAndFigures implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return merge(in.mouseXY()
                 .sample(100, MILLISECONDS)

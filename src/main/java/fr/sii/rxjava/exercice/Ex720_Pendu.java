@@ -40,7 +40,7 @@ public class Ex720_Pendu implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return services.words()
                 .concatMap(mot -> just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, ""))))

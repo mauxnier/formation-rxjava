@@ -25,7 +25,7 @@ public class Ex500_Extrapolation implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return merge(
                 in.mouseLeftClickCount()

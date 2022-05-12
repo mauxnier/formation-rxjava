@@ -23,7 +23,7 @@ public class Ex200_SameLetters implements App, Consts {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         Observable<Character> chars = services.randomChars()
                 .take(5)

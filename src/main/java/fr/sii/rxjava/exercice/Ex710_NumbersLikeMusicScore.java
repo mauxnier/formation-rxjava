@@ -30,7 +30,7 @@ public class Ex710_NumbersLikeMusicScore implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return in.mouseRightClickCount()
                 .zipWith(range(1, MAX_VALUE), (a, b) -> b)

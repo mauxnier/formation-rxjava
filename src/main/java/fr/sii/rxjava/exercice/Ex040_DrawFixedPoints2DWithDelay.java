@@ -27,7 +27,7 @@ public class Ex040_DrawFixedPoints2DWithDelay implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return range(0, PTS_BY_SIDE)
                 .flatMap(x -> range(0, PTS_BY_SIDE)

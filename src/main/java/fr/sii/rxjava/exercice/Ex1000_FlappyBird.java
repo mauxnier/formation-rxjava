@@ -52,7 +52,7 @@ public class Ex1000_FlappyBird implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
         return input(in)
                 .firstElement()
                 .toObservable()

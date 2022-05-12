@@ -29,7 +29,7 @@ public class Ex130_ClickCountBySlice implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return merge(
                 range(0, GROUP_COUNT)

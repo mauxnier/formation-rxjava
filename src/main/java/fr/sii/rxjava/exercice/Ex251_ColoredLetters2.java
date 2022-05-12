@@ -25,7 +25,7 @@ public class Ex251_ColoredLetters2 implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return concat(in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)

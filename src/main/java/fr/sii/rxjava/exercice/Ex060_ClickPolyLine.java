@@ -23,7 +23,7 @@ public class Ex060_ClickPolyLine implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)

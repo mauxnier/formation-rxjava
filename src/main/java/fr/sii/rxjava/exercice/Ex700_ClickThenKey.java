@@ -29,7 +29,7 @@ public class Ex700_ClickThenKey implements App, Consts {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        // return Observable.never();
+        
 
         return in.mouseLeftClickCount()
                 .withLatestFrom(in.mouseXY(), (c, p) -> p)
