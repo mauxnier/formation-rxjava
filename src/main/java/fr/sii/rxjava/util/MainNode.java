@@ -39,10 +39,8 @@ public class MainNode extends StackPane implements Inputs {
 
 
     private void draw(Drawings drawings) {
-        System.out.println("drawings = " + drawings.values().size());
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, 800, 800);
+        gc.clearRect(0, 0, 800, 800);
         gc.setFont(Font.font(gc.getFont().getFamily(), FontWeight.BOLD, 18));
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(3);

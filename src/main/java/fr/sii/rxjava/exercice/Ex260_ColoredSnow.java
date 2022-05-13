@@ -34,7 +34,6 @@ public class Ex260_ColoredSnow implements App {
                 .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
                 .flatMap(p_couleur -> {
                     String id = snowFlakeId(p_couleur._1);
-
                     return interval(40, MILLISECONDS)
                             .takeWhile(t -> t <= 255L)
                             .flatMapSingle(t -> {
@@ -61,10 +60,7 @@ public class Ex260_ColoredSnow implements App {
     }
 
     static Color fade(Color color, double t) {
-        double r = (255 - color.getRed()) * (t / 255.0) + color.getRed();
-        double g = (255 - color.getGreen()) * (t / 255.0) + color.getGreen();
-        double b = (255 - color.getBlue()) * (t / 255.0) + color.getBlue();
-        return Color.rgb((int) r, (int) g, (int) b);
+        return color.deriveColor(1,1,1,1-(t /255));
     }
 
     @Override

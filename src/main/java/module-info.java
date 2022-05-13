@@ -9,4 +9,5 @@ module formation.rxjava {
     exports fr.sii.rxjava;
     exports fr.sii.rxjava.exercice;
     exports fr.sii.rxjava.util;
+    exports fr.sii.rxjava.util.cmds;
 }

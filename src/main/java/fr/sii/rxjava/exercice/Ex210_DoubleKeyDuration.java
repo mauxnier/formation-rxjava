@@ -30,7 +30,6 @@ public class Ex210_DoubleKeyDuration implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
 
         return in.keys()
                 .scan(false, (acc, key) -> !acc)
