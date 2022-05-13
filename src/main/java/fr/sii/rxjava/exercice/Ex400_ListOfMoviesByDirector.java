@@ -37,10 +37,9 @@ public class Ex400_ListOfMoviesByDirector implements App, Consts {
                 .flatMap(m -> services.movies().getMovieDirector(m.title).map(d -> t2(d, m)))
                 .groupBy(T2::_1, T2::_2)
                 .flatMapSingle(movieObs -> movieObs
-                        .toSortedList(CHRONO::compare)
+                        .toSortedList(CHRONO)
                         .map(l -> t2(movieObs.getKey(), l)))
-                .toSortedList(cmpT2::compare)
-                .flatMapObservable(Observable::fromIterable)
+                .sorted(cmpT2)
                 .map(Ex400_ListOfMoviesByDirector::directorAndMoviesFormater)
                 .map(Cmd::addLog);
     }

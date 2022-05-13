@@ -41,14 +41,12 @@ public class Ex410_ActorsWithCommonDirector implements App, Consts {
                         services.movies().getMovieDirector(m.title),
                         services.movies().getMovieActors(m.title).toList().toObservable(), T2::t2))
                 .groupBy(T2::_1, T2::_2)
-                .flatMap(actorsObs -> actorsObs
+                .flatMapSingle(actorsObs -> actorsObs
                         .flatMap(Observable::fromIterable)
                         .distinct()
-                        .toSortedList(byNameThenFirstName::compare)
-                        .toObservable()
+                        .toSortedList(byNameThenFirstName)
                         .map(sortedActors -> t2(actorsObs.getKey(), sortedActors)))
-                .toSortedList(cmpT2::compare)
-                .flatMapObservable(Observable::fromIterable)
+                .sorted(cmpT2)
                 .map(dir_actors -> addLog(directorAndActorsFormater(dir_actors._1, dir_actors._2)));
     }
 

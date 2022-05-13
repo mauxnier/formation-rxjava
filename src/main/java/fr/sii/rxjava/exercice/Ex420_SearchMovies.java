@@ -61,9 +61,7 @@ public class Ex420_SearchMovies implements App, Consts {
 
         return Observable.mergeArray(
                 fromIterable(INIT_CMD),
-
                 query.map(Ex420_SearchMovies::queryCmd),
-
                 query.compose(displayDatasAtPt(services.movies().allActors(), ACTOR_PT)),
                 query.compose(displayDatasAtPt(services.movies().allDirectors(), DIRECTOR_PT)),
                 query.compose(displayDatasAtPt(services.movies().allMovies(), MOVIE_PT)));
