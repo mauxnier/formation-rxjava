@@ -21,14 +21,6 @@ public class Ex015_DrawPointsOnMouseLocationEverySecond implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return Observable.interval(1, SECONDS)
-                .withLatestFrom(in.mouseXY(), (i, m) -> m)
-                .map(p -> addText(p, "x:" + p.x + ", y:" + p.y));
-
-//        return in.mouseXY()
-//                .sample(1, SECONDS)
-//                .map(p -> addText(p, "x:" + p.x + ", y:" + p.y));
+        return Observable.never();
     }
 }

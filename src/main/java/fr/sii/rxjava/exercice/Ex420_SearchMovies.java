@@ -51,20 +51,7 @@ public class Ex420_SearchMovies implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        Observable<String> query = in.keys()
-                .map(Character::toLowerCase)
-                .scan("", (acc, c) -> c == BACKSPACE ? acc.substring(0, max(0, acc.length() - 1)) : acc + c)
-                .skip(1)
-                .share();
-
-        return Observable.mergeArray(
-                fromIterable(INIT_CMD),
-                query.map(Ex420_SearchMovies::queryCmd),
-                query.compose(displayDatasAtPt(services.movies().allActors(), ACTOR_PT)),
-                query.compose(displayDatasAtPt(services.movies().allDirectors(), DIRECTOR_PT)),
-                query.compose(displayDatasAtPt(services.movies().allMovies(), MOVIE_PT)));
+        return Observable.never();
     }
 
     static Command queryCmd(String q) {
@@ -72,8 +59,6 @@ public class Ex420_SearchMovies implements App, Consts {
     }
 
     static <T> ObservableTransformer<String, Command> displayDatasAtPt(Observable<T> src, Pt p) {
-        
-
         return queryObs -> queryObs
                 .debounce(500, MILLISECONDS)
                 .distinctUntilChanged()

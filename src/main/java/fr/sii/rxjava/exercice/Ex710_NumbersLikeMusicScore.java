@@ -30,32 +30,7 @@ public class Ex710_NumbersLikeMusicScore implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return in.mouseRightClickCount()
-                .zipWith(range(1, MAX_VALUE), (a, b) -> b)
-                .startWithItem(0)
-                .switchMap(rc -> in.keys()
-                        .filter(c -> c >= '0' && c <= '9')
-                        .map(String::valueOf)
-                        .map(Integer::parseInt)
-                        .groupBy(c -> c)
-                        .timeInterval(scheduler)
-                        .scan(new GroupeInfo(), GroupeInfo::accumulate)
-                        .skip(1)
-                        .flatMap(groupInfo -> {
-                            GroupedObservable<Integer, Integer> groupObs = groupInfo.groupObs;
-                            int key = groupObs.getKey();
-
-                            return groupObs
-                                    .timeInterval(scheduler)
-                                    .scan(new ValInfo(), ValInfo::accumulate)
-                                    .skip(1)
-                                    .flatMapIterable(valInfo -> dot(key, groupInfo, valInfo))
-                                    .startWithItem(groupTxt(key));
-                        })
-                        .startWith(rc == 0 ? empty() : just(clear()))
-                );
+        return Observable.never();
     }
 
     static Command groupTxt(Integer key) {

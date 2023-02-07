@@ -25,12 +25,7 @@ public class Ex070_Waves implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return in.mouseLeftClickCount()
-                .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .buffer(2)
-                .flatMap(pts -> wave(pts.get(0), pts.get(0).distance(pts.get(1))));
+        return Observable.never();
     }
 
     static Observable<Command> wave(Pt p, double amplitude) {

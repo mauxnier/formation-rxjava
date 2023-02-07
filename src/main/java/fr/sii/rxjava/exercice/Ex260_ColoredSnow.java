@@ -27,24 +27,7 @@ public class Ex260_ColoredSnow implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return in.mouseLeftClickCount()
-                .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
-                .flatMap(p_couleur -> {
-                    String id = snowFlakeId(p_couleur._1);
-                    return interval(40, MILLISECONDS)
-                            .takeWhile(t -> t <= 255L)
-                            .flatMapSingle(t -> {
-                                Pt center = p_couleur._1.move(0, 2 * t);
-
-                                return range(0, RAYS_COUNT)
-                                        .map(i -> snowFlake(center, i, t))
-                                        .map(p -> addLine(center, p, fade(p_couleur._2.color, t)))
-                                        .toList()
-                                        .map(lines -> uniq(id, group(lines)));
-                            })
-                            .concatWith(just(removeUniq(id)));
-                });
+        return Observable.never();
     }
 
     static String snowFlakeId(Pt p) {

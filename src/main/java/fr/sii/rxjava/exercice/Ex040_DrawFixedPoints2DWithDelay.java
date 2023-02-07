@@ -27,15 +27,6 @@ public class Ex040_DrawFixedPoints2DWithDelay implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return range(0, PTS_BY_SIDE)
-                .flatMap(x -> range(0, PTS_BY_SIDE)
-                        .flatMap(y -> services.randoms()
-                                .take(1)
-                                .flatMap(r -> just(y).delay((long) (r * DURATION_MS), MILLISECONDS)))
-                        .map(y -> onePt(x, y)))
-                .map(Cmd::addPt)
-                .concatWith(Observable.<Command>empty().delay(3, SECONDS));
+        return Observable.never();
     }
 }

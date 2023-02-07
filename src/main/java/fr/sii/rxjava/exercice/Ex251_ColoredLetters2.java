@@ -25,25 +25,7 @@ public class Ex251_ColoredLetters2 implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return concat(in.mouseLeftClickCount()
-                .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
-                .groupJoin(in.keys(),
-                        pac -> in.keys().timeout(2, SECONDS).ignoreElements().toObservable().onErrorResumeNext(t ->Observable.empty()),
-                        c -> empty(),
-                        (p_couleur, chars) -> {
-                            Pt p = p_couleur._1;
-                            Couleur couleur = p_couleur._2;
-
-                            return just(startTyping(couleur))
-                                    .concatWith(chars
-                                            .scan("", (acc, chaR) -> acc + chaR)
-                                            .skip(1)
-                                            .map(str -> uniq("" + p, addText(p, str, couleur.color))))
-                                    .concatWith(just(endTyping(p_couleur._2)));
-                        }));
+        return Observable.never();
     }
 
     @Override

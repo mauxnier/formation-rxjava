@@ -26,16 +26,7 @@ public class Ex050_DrawColoredEvery3Points implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return
-                in.mouseXY()
-                        .sample(100, MILLISECONDS).zipWith(
-                                fromArray(Couleur.values())
-                                        .map(Couleur::color)
-                                        .concatMap(c -> just(c).repeat(3))
-                                        .repeat(),
-                                Cmd::addPt);
+        return Observable.never();
     }
 
     @Override
