@@ -29,20 +29,7 @@ public class Ex130_ClickCountBySlice implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return merge(
-                range(0, GROUP_COUNT)
-                        .map(Ex130_ClickCountBySlice::groupLine),
-
-                in.keys()
-                        .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                        .startWith(range(0, GROUP_COUNT).map(i -> pt((0.5 + i) * GROUP_SIZE, 0)))
-                        .groupBy(p -> p.x / GROUP_SIZE)
-                        .filter(groupPtsObs -> groupPtsObs.getKey() < GROUP_COUNT)
-                        .flatMap(groupPtsObs -> groupPtsObs
-                                .zipWith(range(0, Integer.MAX_VALUE), (p, i) -> i)
-                                .map(sum -> groupText(groupPtsObs.getKey(), sum))));
+        return Observable.never();
     }
 
     static Command groupText(int groupId, int sum) {

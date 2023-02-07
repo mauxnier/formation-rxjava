@@ -23,15 +23,7 @@ public class Ex100_SplitWords implements App {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        Observable<Character> keysShared = in.keys().share();
-
-        return keysShared
-                .filter(c -> c != ' ')
-                .buffer(keysShared.filter(c -> c == ' '))
-                .flatMapSingle(cs -> fromIterable(cs).reduce("", (acc, v) -> acc + v))
-                .map(s -> addLog("Mot: '" + s + "'"));
+        return Observable.never();
     }
 
     @Override

@@ -21,15 +21,6 @@ public class Ex120_Distance implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-        return merge(
-                new Ex060_ClickPolyLine().commands(in, services, scheduler),
-
-                in.mouseLeftClickCount()
-                        .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                        .buffer(2, 1)
-                        .scan(0.0, (acc, pts) -> acc + pts.get(0).distance(pts.get(1)))
-                        .map(d -> "Distance: " + d)
-                        .map(Cmd::addLog));
+        return Observable.never();
     }
 }

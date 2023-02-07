@@ -30,27 +30,7 @@ public class Ex210_DoubleKeyDuration implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-
-        return in.keys()
-                .scan(false, (acc, key) -> !acc)
-                .switchMap(active -> {
-                    if (active) {
-                        return Observable.interval(40, MILLISECONDS)
-                                .timeInterval(scheduler)
-                                .scan(0l, (acc, v) -> acc + v.time())
-                                .map(time -> timeCmd(TIME_PT, time));
-                    }
-                    return Observable.empty();
-
-                });
-
-//        return in.keys()
-//                .window(1, 2)
-//                .concatMap(__ -> interval(40, MILLISECONDS)
-//                        .timeInterval(scheduler)
-//                        .scan(0L, (acc, ti) -> acc + ti.getIntervalInMilliseconds())
-//                        .map(sumTI -> timeCmd(TIME_PT, sumTI))
-//                        .takeUntil(in.keys()));
+        return Observable.never();
     }
 
     static Command timeCmd(Pt p, long sumTI) {

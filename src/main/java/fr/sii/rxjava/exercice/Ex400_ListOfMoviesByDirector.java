@@ -31,17 +31,7 @@ public class Ex400_ListOfMoviesByDirector implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return services.movies().allMovies()
-                .flatMap(m -> services.movies().getMovieDirector(m.title).map(d -> t2(d, m)))
-                .groupBy(T2::_1, T2::_2)
-                .flatMapSingle(movieObs -> movieObs
-                        .toSortedList(CHRONO)
-                        .map(l -> t2(movieObs.getKey(), l)))
-                .sorted(cmpT2)
-                .map(Ex400_ListOfMoviesByDirector::directorAndMoviesFormater)
-                .map(Cmd::addLog);
+        return Observable.never();
     }
 
     static String directorAndMoviesFormater(T2<Director, List<Movie>> dirAndMovies) {

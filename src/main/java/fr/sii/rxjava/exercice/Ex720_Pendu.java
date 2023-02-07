@@ -40,17 +40,7 @@ public class Ex720_Pendu implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return services.words()
-                .concatMap(mot -> just(uniq(LETTER_ID, addText(LETTER_PT, discover(mot, ""))))
-                        .concatWith(in.keys()
-                                .distinct()
-                                .scan(new State(mot), State::update)
-                                .skip(1)
-                                .takeUntil((State c) -> c.isEnd())
-                                .flatMap(s -> s.cmds))
-                        .concatWith(just(clear()).delay(3, SECONDS)));
+        return Observable.never();
     }
 
     @Override

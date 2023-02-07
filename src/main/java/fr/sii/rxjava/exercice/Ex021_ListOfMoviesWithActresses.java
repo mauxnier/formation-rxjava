@@ -25,16 +25,7 @@ public class Ex021_ListOfMoviesWithActresses implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        return services.movies().allMovies()
-                .flatMapMaybe(m -> services.movies().getMovieActors(m.title)
-                        .filter(a -> a.sex == f)
-                        .firstElement()
-                        .map(__ -> m))
-                .map(Movie::title)
-                .distinct()
-                .toSortedList()
-                .flatMapObservable(Observable::fromIterable)
-                .map(Cmd::addLog);
+        return Observable.never();
     }
 
     @Override

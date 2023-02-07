@@ -29,27 +29,7 @@ public class Ex700_ClickThenKey implements App, Consts {
 
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return in.mouseLeftClickCount()
-                .withLatestFrom(in.mouseXY(), (c, p) -> p)
-                .zipWith(fromArray(Couleur.values()).repeat(), T2::t2)
-                .concatMap(p_couleur -> {
-                    Couleur couleur = p_couleur._2;
-
-                    return combineLatest(
-                            elapsedTime(),
-                            in.keys().scan("", (acc, c) -> c == BACKSPACE ? acc.substring(0, max(0, acc.length() - 1)) : acc + c),
-                            zeroThenAnErrorAfter5Seconds(),
-                            (t, txt, __) -> T2.t2(t, txt))
-                            .takeUntil((T2 time_txt) -> time_txt._2.equals(couleur.name()))
-                            .flatMap(time_txt -> just(
-                                    uniq("time", timeCmd(TIME_PT, time_txt._1)),
-                                    uniq("txt", Cmd.addText(100, 20, "Frappe: '" + time_txt._2 + "'")))
-                                    .startWith(time_txt._2.equals(couleur.name()) ? just(GAGNE) : empty()))
-                            .onErrorResumeNext(e -> just(PERDU))
-                            .startWithArray(addPt(p_couleur._1, couleur.color), couleurARecopier(couleur));
-                });
+        return Observable.never();
     }
 
     static Command couleurARecopier(Couleur c) {

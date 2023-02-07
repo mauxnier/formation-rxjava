@@ -38,18 +38,7 @@ public class Ex080_MonoPong implements App {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-
-        return in.mouseXY()
-                .map(Pt::x)
-                .startWithItem(0)
-                .flatMapIterable(x -> racketCmds(x))
-                .startWithArray(
-                        addLine(MIN, MIN, MAX, MIN, Color.RED),
-                        addLine(MAX, MIN, MAX, MAX, Color.RED),
-                        addLine(MAX, MAX, MIN, MAX, Color.RED),
-                        addLine(MIN, MAX, MIN, MIN, Color.RED)
-                );
+        return Observable.never();
     }
 
     static List<Command> racketCmds(Integer x) {

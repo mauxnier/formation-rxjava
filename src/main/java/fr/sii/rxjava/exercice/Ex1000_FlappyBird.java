@@ -52,57 +52,7 @@ public class Ex1000_FlappyBird implements App, Consts {
     @Override
     @Contract(pure = true)
     public Observable<Command> commands(Inputs in, Services services, Scheduler scheduler) {
-        
-        return input(in)
-                .firstElement()
-                .toObservable()
-                .switchMap(play -> {
-
-                    Observable<LinkedBlockingDeque<Pipe>> p = Observable.interval(2, TimeUnit.SECONDS)
-                            .scan(new LinkedBlockingDeque<Pipe>(), (pipes, unused) -> {
-                                pipes.add(Pipe.generate());
-                                if (pipes.size() > 10) {
-                                    pipes.poll();
-                                }
-                                return pipes;
-                            });
-
-                    Observable<PositionAndSpeed> birdPosition = Observable.combineLatest(Observable.interval((long) FPS_TIME, TimeUnit.MILLISECONDS),
-                                    input(in)
-                                            .startWithItem(false), (a, b) -> b)
-                            .scan(new PositionAndSpeed(INITIAL_ACC, INITIAL_SPEED, CENTER_H), (oldBird, input) -> {
-                                if (input) {
-                                    final double newAcc = BOOST_ACC;
-                                    final double newSpeed = BOOST_SPEED + newAcc;
-                                    final double newPosition = oldBird.getPosition() - newSpeed;
-                                    return new PositionAndSpeed(newAcc, newSpeed, (int) newPosition);
-                                } else {
-                                    final double newAcc = Math.max(MAX_DROPPING_ACC, oldBird.getAcc() - DROPPING_SPEED_ACC);
-                                    final double newSpeed = Math.max(MAX_DROPPING_SPEED, (oldBird.getSpeed() - newAcc));
-                                    final double newPosition = oldBird.getPosition() - newSpeed;
-                                    return new PositionAndSpeed(newAcc, newSpeed, (int) newPosition);
-                                }
-                            });
-
-                    Observable<LinkedBlockingDeque<Pipe>> backgroundPosition = Observable.interval((long) FPS_TIME, TimeUnit.MILLISECONDS)
-                            .withLatestFrom(p, (a, b) -> {
-                                b.forEach(Pipe::move);
-                                return b;
-                            });
-
-                    return Observable.combineLatest(birdPosition, backgroundPosition,
-                                    (pos, background) -> new GameContext(background, pos))
-                            .takeUntil(this::isGameFinished)
-                            .concatMap(gc -> {
-                                final Observable<Command> bck = Observable.fromIterable(gc.getPipes())
-                                        .concatMap(Pipe::generateCmd);
-                                return Observable.concat(Observable.just(clear()), bck).concatWith(Observable.just(
-                                        Cmd.addPt(CENTER_W, gc.getBird().getPosition())
-                                ));
-                            })
-                            .concatWith(Observable.just(Cmd.addText(Pt.pt(CENTER_W, CENTER_H), "Perduuuuuuu !")));
-                })
-                .repeat();
+        return Observable.never();
     }
 
     private boolean isGameFinished(GameContext gc) {
